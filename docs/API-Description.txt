@@ -1,0 +1,59 @@
+Endpoint: /
+	Produces: [JSON] Endpoints of resources and their descriptors (HATEOAS)
+	Access-Level:
+		- GET : Public
+
+Endpoint: /auth
+	Produces: [JSON] Authentication token, to be included in all requests to authentication-restricted endpoints
+	Access-Level:
+		- POST : Public
+
+Endpoint: /categories
+	Produces: [JSON] Endpoints of categories and their descriptors (HATEOAS)
+	Access-Level:
+		- GET : Public
+
+Endpoint: /books
+	Produces: [JSON] List of book resources
+	Access-Level: 
+		- GET: Public
+		- POST: Authentication-restricted
+
+Endpoint: /video-games
+	Produces: [JSON] List of video-game resources
+	Access-Level: 
+		- GET: Public
+		- POST: Authentication-restricted
+
+Endpoint: /dvds
+	Produces: [JSON] List of dvd resources
+	Access-Level: 
+		- GET: Public
+		- POST: Authentication-restricted
+
+Endpoint: /books/:bookId
+	Produces: [JSON] Book resource
+	Path parameters: 
+		- bookId: ID of the book resource to gather
+	Access-Level: 
+		- GET: Public
+		- PUT: Authentication-restricted
+		- DELETE: Authentication-restricted + Must be author
+
+Endpoint: /video-games/:videoGameId
+	Produces: [JSON] Video-game resource
+	Path parameters: 
+		- videoGameId: ID of the video-game resource to gather
+	Access-Level: 
+		- GET: Public
+		- PUT: Authentication-restricted
+		- DELETE: Authentication-restricted + Must be author
+
+Endpoint: /dvds/:dvdId
+	Produces: [JSON] dvd resource
+	Path parameters: 
+		- dvdId: ID of the book resource to gather
+	Access-Level: 
+		- GET: Public
+		- PUT: Authentication-restricted
+		- DELETE: Authentication-restricted + Must be author
