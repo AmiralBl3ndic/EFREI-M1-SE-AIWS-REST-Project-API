@@ -7,6 +7,21 @@
     <groupId>efrei.m1.aiws.rest</groupId>
     <artifactId>aiws-rest-project</artifactId>
     <version>0.0.0</version>
-
     
+    <properties>
+        <jersey.version>2.29.1</jersey.version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+    </dependencies>
 </project>
