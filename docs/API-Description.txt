@@ -15,18 +15,36 @@ Endpoint: /categories
 
 Endpoint: /books
 	Produces: [JSON] List of book resources
+	Request parameters:
+		- limit=[integer]: Limit the number or records to return
+		- start=[integer]: Select records with greater or equal id
+		- keyword=[string]: Select records containing the keyword in their name
+		- city=[string]: Select records with matching city field
+		- user=[integer(id)]: Select records created by user with given id
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
 
 Endpoint: /video-games
 	Produces: [JSON] List of video-game resources
+	Request parameters:
+		- limit=[integer]: Limit the number or records to return
+		- start=[integer]: Select records with greater or equal id
+		- keyword=[string]: Select records containing the keyword in their name
+		- city=[string]: Select records with matching city field
+		- user=[integer(id)]: Select records created by user with given id
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
 
 Endpoint: /dvds
 	Produces: [JSON] List of dvd resources
+	Request parameters:
+		- limit=[integer]: Limit the number or records to return
+		- start=[integer]: Select records with greater or equal id
+		- keyword=[string]: Select records containing the keyword in their name
+		- city=[string]: Select records with matching city field
+		- user=[integer(id)]: Select records created by user with given id
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
