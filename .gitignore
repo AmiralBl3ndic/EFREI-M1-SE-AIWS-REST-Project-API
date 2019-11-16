@@ -3,3 +3,4 @@
 out/**
 artifacts/**
 lib/**
+**/.DS_Store
