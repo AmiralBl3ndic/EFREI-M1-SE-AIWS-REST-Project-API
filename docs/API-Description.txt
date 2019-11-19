@@ -24,6 +24,21 @@ Endpoint: /books
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
+		    -header
+		        -"Authorization": {JWT Token obtained when authenticated through /auth endpoint}
+		    -body
+		        -required
+		            -ID=[integer]: the number's ID of the book
+		            -title=[string]: the title of the book
+		            -authorName=[string]: the name of the author
+		            -authorSurname=[string]: the lastname of the author
+		        -optional
+		            -collection[string]:the collection of the book
+		            -releaseDate[string]: the release date of the book
+		            -numberOfPage=[integer]: number of the page
+		            -synopsis[string]: little description about the story of the book
+		            -rate=[integer]: the rate of the book on 5
+		             -editor[string]: the editor of this book
 
 Endpoint: /video-games
 	Produces: [JSON] List of video-game resources
@@ -36,6 +51,22 @@ Endpoint: /video-games
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
+		    -header
+                -"Authorization": {JWT Token obtained when authenticated through /auth endpoint}
+            -body
+        		-required
+        		    -ID=[integer]: the number's ID of the game
+        		    -title=[string]: the title of the game
+        		    -editor=[string]: the editor of the game
+
+        	    -optional
+        	        -ageLimit=[integer]: the age limit of the game (PEGI)
+        	        -numberOfPlayer=[integer]: the number of the player who can play to the game
+        	        -rate=[integer]: the rate of the game on 5
+        	        -releaseDate=[string]: the release date of the game
+                    -type=[string]: the kind of the game (category)
+                    -description=[string]: the description of the game
+                    -plateform=[string]: the device where the game is available
 
 Endpoint: /dvds
 	Produces: [JSON] List of dvd resources
@@ -48,6 +79,21 @@ Endpoint: /dvds
 	Access-Level: 
 		- GET: Public
 		- POST: Authentication-restricted
+		    -header
+                -"Authorization": {JWT Token obtained when authenticated through /auth endpoint}
+            -body
+        		-required
+        		    -ID=[integer]: the number's ID of the movie
+        		    -title=[string]: the title of the movie
+        		    -editor=[string]: the editor of the movie
+
+        	    -optional
+        	        -ageLimit=[integer]: the age limit of the movie (PEGI)
+        	        -duration=[integer]: the duration of the movie
+        	        -rate=[integer]: the rate of the movie on 5
+        	        -releaseDate=[string]: the release date of the movie
+                    -type=[string]: the kind of the movie (category)
+                    -description=[string]: the description of the movie
 
 Endpoint: /books/:bookId
 	Produces: [JSON] Book resource

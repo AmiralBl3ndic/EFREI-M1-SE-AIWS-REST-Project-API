@@ -13,11 +13,41 @@
     </properties>
     
     <dependencies>
+
+        <!-- Needed to access MySQL databases with JDBC -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
+        </dependency>
+
+        <!-- Needed for connection pooling -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+        <!-- Java Persistence API (JPA) Implementation: chosen because works well with HikariCP -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.8.Final</version>
+        </dependency>
+
+        <!-- Needed to allow database connection pooling while using JPA -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+            <version>5.4.8.Final</version>
+        </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
