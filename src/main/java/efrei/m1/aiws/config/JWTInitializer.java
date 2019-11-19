@@ -19,4 +19,9 @@ public class JWTInitializer implements ServletContextListener {
 		AuthenticationService.setJwtAlgorithm(algorithm);
 		AuthenticationService.setJwtIssuer(context.getInitParameter(INIT_PARAM_JWT_ISSUER));
 	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
+	}
 }
