@@ -10,5 +10,6 @@ public class Constants {
 
 	///region Context Dependency Injection | Attribute Names
 	public static final String CDI_JWT_ALGORITHM = "cdiJwtAlgorithm";
+	public static final String CDI_JWT_ISSUER = "cdiJwtIssuer";
 	///endregion
 }
