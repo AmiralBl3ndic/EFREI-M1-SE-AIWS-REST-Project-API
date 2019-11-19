@@ -8,6 +8,16 @@
 		<listener-class>efrei.m1.aiws.config.JWTInitializer</listener-class>
 	</listener>
 	
+	<context-param>
+		<param-name>jwtIssuer</param-name>
+		<param-value>ST2AIWS</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>jwtSecret</param-name>
+		<param-value>TDcU6MZidDf7xalZX5R3SG2zdvBTjj3E</param-value>
+	</context-param>
+	
 	<servlet>
 		<servlet-name>REST API</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
