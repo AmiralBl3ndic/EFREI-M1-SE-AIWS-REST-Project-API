@@ -23,6 +23,8 @@ Endpoint: /books
 		- user=[integer(id)]: Select records created by user with given id
 	Access-Level: 
 		- GET: Public
+		    -Body:
+
 		- POST: Authentication-restricted
 
 Endpoint: /video-games
