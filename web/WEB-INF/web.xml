@@ -14,6 +14,11 @@
 	</context-param>
 	
 	<context-param>
+		<param-name>dbProperties</param-name>
+		<param-value>/WEB-INF/db.properties</param-value>
+	</context-param>
+	
+	<context-param>
 		<param-name>jwtSecret</param-name>
 		<param-value>TDcU6MZidDf7xalZX5R3SG2zdvBTjj3E</param-value>
 	</context-param>
