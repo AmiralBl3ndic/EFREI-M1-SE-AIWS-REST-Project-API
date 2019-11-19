@@ -1,5 +1,6 @@
 package efrei.m1.aiws.service;
 
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,7 @@ public class AuthenticationService {
 
 	@Setter
 	private static String jwtIssuer;
+
+	@Setter
+	private static JWTVerifier jwtVerifier;
 }
