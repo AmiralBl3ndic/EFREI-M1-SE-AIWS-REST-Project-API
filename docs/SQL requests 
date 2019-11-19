@@ -1,0 +1,56 @@
+SQL REQUESTS
+
+note : :keyword is the search fill by a user 
+
+
+=== 1 ===
+
+***********************************
+* Display media list by Categorie *
+***********************************
+
+-> 
+SELECT * from DVDs
+-> 
+SELECT * from VideoGames
+-> 
+SELECT * from Books
+
+***********************************
+*   Display media list keyword    *
+***********************************
+
+-> 
+SELECT * FROM DVDs
+WHERE Titre = :keyword
+->
+SELECT * FROM VideoGames
+WHERE Titre = :keyword
+->
+SELECT * FROM Books
+WHERE Titre = :keyword
+
+***********************************
+*   Display media list by city    *
+***********************************
+
+SELECT * FROM User
+WHERE city = :keyword
+
+***********************************
+*   Display media list by User    *
+***********************************
+
+SELECT * FROM User
+WHERE ID_USER = :keyword 
+
+=== 2 ===
+
+SELECT * FROM DVDs
+WHERE VG_RATING = :keyword 
+
+
+
+
+
+
