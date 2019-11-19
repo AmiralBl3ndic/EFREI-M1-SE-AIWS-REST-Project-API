@@ -12,18 +12,25 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class JWTInitializer implements ServletContextListener {
+
+	private Algorithm algorithm;
+
+	private String issuer;
+
+	private JWTVerifier verifier;
+
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext context = sce.getServletContext();
 
 		///region JWT CDI
-		Algorithm algorithm = Algorithm.HMAC256(context.getInitParameter(INIT_PARAM_JWT_SECRET));
-		final String issuer = context.getInitParameter(INIT_PARAM_JWT_ISSUER);
-		JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
+		this.algorithm = Algorithm.HMAC256(context.getInitParameter(INIT_PARAM_JWT_SECRET));
+		this.issuer = context.getInitParameter(INIT_PARAM_JWT_ISSUER);
+		this.verifier = JWT.require(algorithm).withIssuer(issuer).build();
 
-		JWTService.setJwtAlgorithm(algorithm);
-		JWTService.setJwtIssuer(issuer);
-		JWTService.setJwtVerifier(verifier);
+		JWTService.setJwtAlgorithm(this.algorithm);
+		JWTService.setJwtIssuer(this.issuer);
+		JWTService.setJwtVerifier(this.verifier);
 		///endregion
 	}
 
