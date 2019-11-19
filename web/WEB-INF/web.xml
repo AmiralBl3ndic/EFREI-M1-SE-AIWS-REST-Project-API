@@ -7,6 +7,9 @@
 	<listener>
 		<listener-class>efrei.m1.aiws.config.JWTInitializer</listener-class>
 	</listener>
+	<listener>
+		<listener-class>efrei.m1.aiws.config.DAOInitializer</listener-class>
+	</listener>
 	
 	<context-param>
 		<param-name>jwtIssuer</param-name>
