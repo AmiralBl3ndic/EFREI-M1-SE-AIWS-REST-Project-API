@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AuthenticationService {
+public class JWTService {
 	@Setter
 	private static Algorithm jwtAlgorithm;
 
