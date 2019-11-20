@@ -29,7 +29,7 @@ public class JWTService {
 	 * @param email Email of the user to use
 	 * @return {@link JWT} token with the email in the payload, empty string in case of an error
 	 */
-	public static String createJWTToken(String email) {
+	public static String createToken(String email) {
 		try {
 			return JWT.create()
 				.withIssuer(jwtIssuer)
