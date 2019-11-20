@@ -5,3 +5,4 @@ artifacts/**
 lib/**
 **/.DS_Store
 web/WEB-INF/db.properties
+target/**
