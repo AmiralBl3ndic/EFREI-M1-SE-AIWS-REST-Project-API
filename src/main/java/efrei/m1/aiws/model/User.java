@@ -7,7 +7,7 @@ import lombok.*;
 public class User {
 
     @ToString.Exclude
-    private int dbId;
+    transient private String dbId;
 
     private String email;
 

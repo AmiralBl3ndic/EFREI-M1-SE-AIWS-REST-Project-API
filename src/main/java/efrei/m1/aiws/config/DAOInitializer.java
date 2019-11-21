@@ -37,4 +37,9 @@ public class DAOInitializer implements ServletContextListener {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
+	}
 }

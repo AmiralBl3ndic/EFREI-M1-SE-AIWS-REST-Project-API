@@ -5,8 +5,8 @@ import lombok.NonNull;
 public interface DAO<T> {
 
 public void create(@NonNull T obj) throws DAOException;
-public void update(@NonNull T obj, String dbId) throws DAOException;
+public void update(@NonNull T obj) throws DAOException;
 public void delete(@NonNull T obj) throws DAOException;
-public T findById(String dbId) throws DAOException;
+public T findBy(String db) throws DAOException;
 
 }
