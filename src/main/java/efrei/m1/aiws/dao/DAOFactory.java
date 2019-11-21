@@ -2,7 +2,10 @@ package efrei.m1.aiws.dao;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import efrei.m1.aiws.model.User;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -58,4 +61,17 @@ public class DAOFactory {
 
 		return new DAOFactory(hkConfig);
 	}
+
+	public Connection getConnection() throws SQLException {
+		return this.dataSource.getConnection();
+	}
+
+	/*
+	public DAO<User> getUserDao(){
+		return new UserDAOImpl(this);
+	}
+
+	 */
+
+
 }
