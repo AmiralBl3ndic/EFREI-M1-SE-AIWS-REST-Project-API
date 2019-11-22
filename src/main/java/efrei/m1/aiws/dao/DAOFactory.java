@@ -31,7 +31,7 @@ public class DAOFactory {
 	 * @return Instance of {@link DAOFactory}
 	 * @throws DAOConfigurationException In case of any configuration problem (JDBC, Runtime...)
 	 */
-	public static DAOFactory getInstance(Properties dbProperties) throws DAOConfigurationException {
+	public static DAOFactory getInstance(Properties dbProperties) {
 		// Read database configuration from .properties file
 		final String jdbcDriver = dbProperties.getProperty(PROP_JDBC_DRIVER);
 		final String jdbcUrl = dbProperties.getProperty(PROP_JDBC_URL);
