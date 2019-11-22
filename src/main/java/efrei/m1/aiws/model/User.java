@@ -1,16 +1,27 @@
-package efrei.m1.aiws.model;
+package efrei.m1.aiws.beans;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import lombok.*;
+@ToString
+public class User
+{
+    @Getter
+    @Setter
+    private String mail = "";
 
-@Data
-@ToString @NoArgsConstructor
-public class User {
+    @Getter
+    @Setter
+    private String password = "";
 
-    @ToString.Exclude
-    transient private String dbId;
+    @Getter
+    @Setter
+    private String city = "";
 
-    private String email;
-
-    private String password;
-
+    public User(String mail, String password, String city)
+    {
+        this.mail = mail;
+        this.password = password;
+        this.city = city;
+    }
 }
