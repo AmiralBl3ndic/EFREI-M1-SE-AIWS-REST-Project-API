@@ -9,7 +9,7 @@ public class User {
     @ToString.Exclude
     private String dbId;
 
-    private String mail;
+    private String email;
 
     private String password;
 
