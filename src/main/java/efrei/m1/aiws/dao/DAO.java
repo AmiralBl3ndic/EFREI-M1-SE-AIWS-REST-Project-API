@@ -1,12 +1,30 @@
 package efrei.m1.aiws.dao;
-import efrei.m1.aiws.model.User;
+
 import lombok.NonNull;
 
 public interface DAO<T> {
+	/**
+	 * Creates an instance of passed object in the database
+	 * @param obj Object to store in the database
+	 */
+	void create(@NonNull T obj);
 
-public void create(@NonNull T obj) throws DAOException;
-public void update(@NonNull T obj) throws DAOException;
-public void delete(@NonNull T obj) throws DAOException;
-public T findBy(String db) throws DAOException;
+	/**
+	 * Updates an instance of the passed object in the database
+	 * @param obj Object to update in the database
+	 */
+	void update(@NonNull T obj);
 
+	/**
+	 * Deletes an instance of the passed object in the database
+	 * @param obj Object to delete from the database
+	 */
+	void delete(@NonNull T obj);
+
+	/**
+	 * Find an instance of the object in the database by its id
+	 * @param db Database ID of the object to look for
+	 * @return {@code null} if no object found, Instance of object if found
+	 */
+	T findBy(String db);
 }
