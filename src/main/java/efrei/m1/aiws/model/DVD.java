@@ -1,67 +1,56 @@
-package efrei.m1.aiws.beans;
-import lombok.Getter;
+package efrei.m1.aiws.model;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
-public class DVD
-{
-    @Getter @Setter
-    private int ID_DVD = 0;
+@Data @NoArgsConstructor
+public class DVD {
+	private static final int DEFAULT_RATING = 0;
+	private static final int MINIMUM_RATING = 0;
+	private static final int MAXIMUM_RATING = 5;
 
-    @Getter @Setter
-    private int ID_USER = 0;
+	private int dvdId;
 
-    @Getter @Setter
-    private int ageLimit = 0;
+	private int userId;
 
-    @Getter @Setter
-    private int duration = 0;
+	private int ageLimit;
 
-    @Getter @Setter
-    private String title = "";
+	private int duration;
 
-    @Getter @Setter
-    private String type = "";
+	private String title;
 
-    @Getter @Setter
-    private String description = "";
+	private String type;
 
-    @Getter @Setter
-    private String editor = "";
+	private String description;
 
-    @Getter @Setter
-    private String audio = "";
+	private String editor;
 
-    @Getter @Setter
-    private String releaseDate = "";
+	private String audio;
 
-    //Manual Setter to check if the rate is between 0 and 5
-    private int rating = 0;
-    public int getRating() {return rating;}
-    public void setRating(int rating)
-    {
-        if(rating>=0 && rating <= 6)
-            this.rating = rating;
-    }
+	private String releaseDate;
 
-    public DVD(int ID_DVD, int ID_USER, int ageLimit, int duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating)
-    {
-        this.ID_DVD = ID_DVD;
-        this.ID_USER = ID_USER;
-        this.ageLimit = ageLimit;
-        this.duration = duration;
-        this.title = title;
-        this.type = type;
-        this.description = description;
-        this.editor = editor;
-        this.audio = audio;
-        this.releaseDate = releaseDate;
-        this.rating = rating;
-    }
+	@Setter(AccessLevel.NONE)
+	private int rating;
 
+	public void setRating(int rating) {
+		if(rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING) {
+			this.rating = rating;
+		}
+	}
 
-
-
-
+	public DVD(int dvdId, int userId, int ageLimit, int duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating) {
+		this.dvdId = dvdId;
+		this.userId = userId;
+		this.ageLimit = ageLimit;
+		this.duration = duration;
+		this.title = title;
+		this.type = type;
+		this.description = description;
+		this.editor = editor;
+		this.audio = audio;
+		this.releaseDate = releaseDate;
+		this.rating = rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING ? rating : DEFAULT_RATING;
+	}
 }
