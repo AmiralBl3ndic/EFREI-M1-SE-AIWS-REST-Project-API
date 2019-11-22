@@ -106,7 +106,7 @@ public class UserDAOImpl implements DAO<User> {
 	}
 
 	@Override
-	public User findBy(String id) throws DAOException {
+	public User findBy(String id) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
