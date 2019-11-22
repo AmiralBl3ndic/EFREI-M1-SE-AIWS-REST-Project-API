@@ -1,27 +1,13 @@
-package efrei.m1.aiws.beans;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+package efrei.m1.aiws.model;
 
-@ToString
-public class User
-{
-    @Getter
-    @Setter
-    private String mail = "";
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-    @Getter
-    @Setter
-    private String password = "";
+@Data @AllArgsConstructor
+public class User {
+    private String mail;
 
-    @Getter
-    @Setter
-    private String city = "";
+    private String password;
 
-    public User(String mail, String password, String city)
-    {
-        this.mail = mail;
-        this.password = password;
-        this.city = city;
-    }
+    private String city;
 }

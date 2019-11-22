@@ -21,12 +21,12 @@ public class VideoGame {
 
 	private String resume;
 
-	private String video_game_editor;
+	private String editor;
 
 	private String releaseDate;
 
 	@Setter(AccessLevel.NONE)
-	private int rating = 0;
+	private int rating;
 
 	public void setRating(int rating) {
 		if(rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING) {
@@ -34,13 +34,13 @@ public class VideoGame {
 		}
 	}
 
-	public VideoGame(int videoGameId, int userId, String name, String type, String resume, String video_game_editor, String releaseDate, int rating) {
+	public VideoGame(int videoGameId, int userId, String name, String type, String resume, String editor, String releaseDate, int rating) {
 		this.videoGameId = videoGameId;
 		this.userId = userId;
 		this.name = name;
 		this.type = type;
 		this.resume = resume;
-		this.video_game_editor = video_game_editor;
+		this.editor = editor;
 		this.releaseDate = releaseDate;
 		this.rating = rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING ? rating : DEFAULT_RATING;
 	}

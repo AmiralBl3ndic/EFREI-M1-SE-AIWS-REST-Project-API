@@ -10,11 +10,16 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Wrapper class for DAO generation-related operations
  */
 public class DAOFactory {
+
+	private static final Logger logger = Logger.getLogger(DAOFactory.class.getName());
+
 	///region db.properties keys
 	private static final String PROP_JDBC_DRIVER = "jdbcDriver";
 	private static final String PROP_JDBC_URL = "jdbcUrl";
@@ -29,6 +34,7 @@ public class DAOFactory {
 
 	private DAOFactory(HikariConfig config) {
 		this.dataSource = new HikariDataSource(config);
+		logger.log(Level.INFO, "Datasource created");
 	}
 
 	/**
@@ -37,7 +43,7 @@ public class DAOFactory {
 	 * @return Instance of {@link DAOFactory}
 	 * @throws DAOConfigurationException In case of any configuration problem (JDBC, Runtime...)
 	 */
-	public static DAOFactory getInstance(Properties dbProperties) throws DAOConfigurationException {
+	public static DAOFactory getInstance(Properties dbProperties) {
 		// Read database configuration from .properties file
 		final String jdbcDriver = dbProperties.getProperty(PROP_JDBC_DRIVER);
 		final String jdbcUrl = dbProperties.getProperty(PROP_JDBC_URL);
@@ -50,6 +56,8 @@ public class DAOFactory {
 			throw new DAOConfigurationException("Cannot find class " + jdbcDriver, e);
 		}
 
+		logger.log(Level.INFO, "Database driver registered");
+
 		HikariConfig hkConfig = new HikariConfig();
 
 		// Mandatory configuration
@@ -61,6 +69,8 @@ public class DAOFactory {
 		hkConfig.addDataSourceProperty("cachePrepStmts", "true");
 		hkConfig.addDataSourceProperty("prepStmtCacheSize", "250");
 		hkConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+		logger.log(Level.INFO, "HikariCP configuration done, creating datasource");
 
 		return new DAOFactory(hkConfig);
 	}
