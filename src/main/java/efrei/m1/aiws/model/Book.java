@@ -1,64 +1,56 @@
-package efrei.m1.aiws.beans;
+package efrei.m1.aiws.model;
 
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
-public class Book
-{
-    @Getter @Setter
-    int ID_BOOK = 0;
+@Data @NoArgsConstructor
+public class Book {
+	private static final int DEFAULT_RATING = 0;
+	private static final int MINIMUM_RATING = 0;
+	private static final int MAXIMUM_RATING = 5;
 
-    @Getter @Setter
-    int ID_USER = 0;
+	private int bookId;
 
-    @Getter @Setter
-    String author = "";
+	private int userId;
 
-    @Getter @Setter
-    String title = "";
+	private String author;
 
-    @Getter @Setter
-    String type = "";
+	private String title;
 
-    @Getter @Setter
-    String description = "";
+	private String type;
 
-    @Getter @Setter
-    String releaseDate = "";
+	private String description;
 
-    @Getter @Setter
-    String editor = "";
+	private String releaseDate;
 
-    @Getter @Setter
-    String plateform = "";
+	private String editor;
 
-    @Getter @Setter
-    int ageLimit = 0;
+	private String platform;
 
-    //Manual Setter to check if the rate is between 0 and 5
-    private int rating = 0;
-    public int getRating() {return rating;}
-    public void setRating(int rating)
-    {
-        if(rating>=0 && rating <= 6)
-            this.rating = rating;
-    }
+	private int ageLimit;
 
-    public Book(int ID_USER, int ID_BOOK, String author, String title, String type, String description, String releaseDate, String editor, String plateform, int ageLimit, int rating)
-    {
-        this.ID_USER = ID_USER;
-        this.ID_BOOK = ID_BOOK;
-        this.author = author;
-        this.title = title;
-        this.type = type;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.editor = editor;
-        this.plateform = plateform;
-        this.ageLimit = ageLimit;
-        this.rating = rating;
-    }
+	@Setter(AccessLevel.NONE)
+	private int rating;
 
+	public void setRating(int rating) {
+		if (rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING) {
+			this.rating = rating;
+		}
+	}
+
+	public Book(int userId, int bookId, String author, String title, String type, String description, String releaseDate, String editor, String platform, int ageLimit, int rating) {
+		this.userId = userId;
+		this.bookId = bookId;
+		this.author = author;
+		this.title = title;
+		this.type = type;
+		this.description = description;
+		this.releaseDate = releaseDate;
+		this.editor = editor;
+		this.platform = platform;
+		this.ageLimit = ageLimit;
+		this.rating = rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING ? rating : DEFAULT_RATING;
+	}
 }
