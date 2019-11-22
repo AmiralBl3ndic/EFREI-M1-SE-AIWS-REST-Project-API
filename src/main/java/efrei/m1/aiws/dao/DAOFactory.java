@@ -1,12 +1,9 @@
 package efrei.m1.aiws.dao;
 
+import efrei.m1.aiws.model.User;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import efrei.m1.aiws.model.User;
-import lombok.NonNull;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -83,19 +80,4 @@ public class DAOFactory {
 	public DAO<User> getUserDao(){
 		return new UserDAOImpl(this);
 	}
-
-	private static Properties loadDatabaseProperties(@NonNull InputStream propertiesFile) throws DAOConfigurationException {
-		Properties dbProperties = new Properties();
-
-		try {
-			dbProperties.load(propertiesFile);
-		} catch (IOException e) {
-			throw new DAOConfigurationException("Unable to load database properties file", e);
-		}
-
-		return dbProperties;
-	}
-
-
-
 }
