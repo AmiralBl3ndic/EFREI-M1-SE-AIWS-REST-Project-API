@@ -54,6 +54,7 @@ public class DAOUtils {
 		user.setDbId(resultSet.getString(DB_COL_ID));
 		user.setEmail(resultSet.getString(DB_COL_EMAIL));
 		user.setPassword(resultSet.getString(DB_COL_PASSWORD));
+		user.setCity(resultSet.getString(DB_COL_CITY));
 		return user;
 	}
 
