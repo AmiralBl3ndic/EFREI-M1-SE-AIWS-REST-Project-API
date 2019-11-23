@@ -26,7 +26,7 @@ public class AuthEndpoint {
 		JSONAuthPostResponse res = new JSONAuthPostResponse();
 
 		if (authenticatedUser != null) {
-			res.setToken(JWTService.createToken(authenticatedUser.getEmail()));
+			res.setToken(JWTService.createToken(authenticatedUser.getDbId(), authenticatedUser.getEmail()));
 			return Response.ok().entity(res).build();
 		}
 

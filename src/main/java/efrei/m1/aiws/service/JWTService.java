@@ -28,17 +28,20 @@ public class JWTService {
 
 	///region JWT Claims
 	private static final String JWT_CLAIM_EMAIL = "email";
+	private static final String JWT_CLAIM_DBID = "dbId";
 	///endregion
 
 	/**
 	 * Create a valid {@link JWT} token issued by the application
+	 * @param dbId Database id of the user to use
 	 * @param email Email of the user to use
 	 * @return {@link JWT} token with the email in the payload, empty string in case of an error
 	 */
-	public static String createToken(String email) {
+	public static String createToken(String dbId, String email) {
 		try {
 			return JWT.create()
 				.withIssuer(jwtIssuer)
+				.withClaim(JWT_CLAIM_DBID, dbId)
 				.withClaim(JWT_CLAIM_EMAIL, email)
 				.sign(jwtAlgorithm);
 		} catch (JWTCreationException e) {
