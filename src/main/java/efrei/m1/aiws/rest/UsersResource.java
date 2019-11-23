@@ -43,6 +43,13 @@ public class UsersResource {
 		user.setCity(city);
 		UsersResource.userDAO.create(user);
 
+		// If database record creation failed (no dbId set for user object)
+		if (user.getDbId() == null) {
+			res.setError(USERS_ERROR_CANNOT_CREATE);
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+		}
+
+
 		// Obtain JWT token (so that the user does not need to authenticate after creating an account)
 		final String jwtToken = JWTService.createToken(user.getDbId(), user.getEmail());
 
