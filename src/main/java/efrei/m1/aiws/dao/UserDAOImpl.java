@@ -1,6 +1,7 @@
 package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.User;
+import efrei.m1.aiws.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,9 +15,11 @@ public class UserDAOImpl implements DAO<User> {
 	static final String DB_COL_ID="ID_USER";
 	static final String DB_COL_EMAIL="EMAIL";
 	static final String DB_COL_PASSWORD="PASSWORD";
+	static final String DB_COL_CITY="CITY";
 
 	//Queries
-	private static final String SQL_SELECT_BY_ID="SELECT ID, EMAIL FROM USERS WHERE ID_USER=?";
+	private static final String SQL_SELECT_BY_ID="SELECT ID_USER, EMAIL, PASSWORD, CITY FROM USERS WHERE ID_USER=?";
+	private static final String SQL_SELECT_BY_EMAIL="SELECT ID_USER, EMAIL, PASSWORD, CITY FROM USERS WHERE EMAIL=?";
 	private static final String SQL_INSERT_USER="INSERT INTO USERS(EMAIL, PASSWORD) VALUES (?,?)";
 	private static final String SQL_UPDATE_USER="UPDATE USERS SET EMAIL = ?, PASSWORD = ? WHERE ID_USER = ?";
 	private static final String DELETE_USER="DELETE FROM USERS WHERE ID_USER=?";
@@ -33,8 +36,11 @@ public class UserDAOImpl implements DAO<User> {
 		try {
 			connection = this.daoFactory.getConnection();
 
+			final String userEmail = user.getEmail();
+			final String userHashedPassword = AuthenticationService.hashWithBCrypt(user.getPassword());
+
 			// Insert query
-			preparedStatement= DAOUtils.initPreparedStatement(connection,SQL_INSERT_USER, true, user.getEmail(), user.getPassword());
+			preparedStatement= DAOUtils.initPreparedStatement(connection, SQL_INSERT_USER, true, userEmail, userHashedPassword);
 			int status = preparedStatement.executeUpdate();
 
 			if (status == 0) {
@@ -84,7 +90,7 @@ public class UserDAOImpl implements DAO<User> {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 
-		// Cshecking if the user exists in the database
+		// Checking if the user exists in the database
 		if(user.getDbId() == null || user.getDbId().isEmpty()) {
 			throw new DAOException("Could not delete the user, id not found");
 		}
@@ -107,25 +113,43 @@ public class UserDAOImpl implements DAO<User> {
 
 	@Override
 	public User findBy(String id) {
+		return selectBy(SQL_SELECT_BY_ID, id);
+	}
+
+	/**
+	 * Select a {@link User} record from the database based upon its {@code email}
+	 * @param email Email of the user to get from the database
+	 * @return {@code null} if no {@link User} found, {@link User} record matching email otherwise
+	 */
+	public User findByEmail(String email) {
+		return selectBy(SQL_SELECT_BY_EMAIL, email);
+	}
+
+	/**
+	 * Generic function allowing to select a {@link User} from the database based upon different criteria
+	 * @param sqlQuerySelector SQL Query string (with a single parameter to be set by a {@link PreparedStatement})
+	 * @param value Value of the parameter to be set by a {@link PreparedStatement}
+	 * @return {@code null} if no {@link User} found, {@link User} record matching criterion otherwise
+	 */
+	private User selectBy(String sqlQuerySelector, String value) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		User user = null;
 
 		try {
-			connection=this.daoFactory.getConnection();
-			preparedStatement=DAOUtils.initPreparedStatement(connection,SQL_SELECT_BY_ID,false,id);
-			resultSet=preparedStatement.executeQuery();
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
+			resultSet = preparedStatement.executeQuery();
 
-			//result set not empty
-
-			if(resultSet.next()) {
+			// If the result set is not empty
+			if (resultSet.next()) {
 				user = DAOUtils.mappingUser(resultSet);
 			}
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			throw new DAOException(e);
 		} finally {
-			DAOUtils.silentClose(resultSet,preparedStatement,connection);
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 
 		return user;

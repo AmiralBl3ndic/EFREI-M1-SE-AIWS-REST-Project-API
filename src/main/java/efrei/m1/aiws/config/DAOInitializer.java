@@ -1,6 +1,9 @@
 package efrei.m1.aiws.config;
 
 import efrei.m1.aiws.dao.DAOConfigurationException;
+import efrei.m1.aiws.dao.DAOFactory;
+import efrei.m1.aiws.dao.UserDAOImpl;
+import efrei.m1.aiws.service.AuthenticationService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -24,11 +27,16 @@ public class DAOInitializer implements ServletContextListener {
 
 		// Attempt to load the db.properties file as a Properties object
 		try {
-			InputStream dbPropsStream = context.getResourceAsStream(INIT_PARAM_DB_PROPERTIES);
+			InputStream dbPropsStream = context.getResourceAsStream(context.getInitParameter(INIT_PARAM_DB_PROPERTIES));
 			dbProperties.load(dbPropsStream);
 		} catch (IOException e) {
 			throw new DAOConfigurationException("Unable to load WEB-INF/db.properties file as a Properties object", e);
 		}
+
+		final DAOFactory daoFactory = DAOFactory.getInstance(dbProperties);
+
+		// Context Dependency Injection for AuthenticationService
+		AuthenticationService.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
 	}
 
 	@Override
