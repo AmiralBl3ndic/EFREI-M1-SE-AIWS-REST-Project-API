@@ -7,6 +7,7 @@ import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
 import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
 
+import efrei.m1.aiws.service.JWTService;
 import lombok.Setter;
 
 import javax.ws.rs.*;
@@ -35,12 +36,21 @@ public class UsersResource {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
 		}
 
+		// Create database record (which automatically sets the generated id)
 		User user = new User();
 		user.setEmail(email);
 		user.setPassword(password);
 		user.setCity(city);
+		UsersResource.userDAO.create(user);
 
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		// Obtain JWT token (so that the user does not need to authenticate after creating an account)
+		final String jwtToken = JWTService.createToken(user.getDbId(), user.getEmail());
+
+		// Build response object
+		res.setId(user.getDbId());
+		res.setToken(jwtToken);
+
+		return Response.status(Response.Status.CREATED).entity(res).build();
 	}
 
 	@POST
