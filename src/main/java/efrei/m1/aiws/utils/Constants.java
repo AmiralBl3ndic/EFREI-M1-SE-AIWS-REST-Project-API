@@ -13,6 +13,7 @@ public class Constants {
 	///region Error messages
 	///region Authentication
 	public static final String AUTH_ERROR_WRONG_CREDENTIALS = "Wrong email/password";
+	public static final String AUTH_JWT_TOKEN_NEEDED = "Authentication needed: please provide a valid JWT token";
 	///endregion
 
 	///region Users
