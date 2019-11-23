@@ -12,12 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.security.SecureRandom;
+import java.util.Date;
 
 /**
  * Service handling all operations related to JSON Web Tokens (creation, validation, decoding, ...)s
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JWTService {
+	private static final int MS_IN_DAY = 86400000;
+
 	///region User model CDI
 	@Setter
 	private static DAO<User> userDAO;
@@ -49,6 +52,7 @@ public class JWTService {
 		try {
 			return JWT.create()
 				.withIssuer(jwtIssuer)
+				.withExpiresAt(new Date(new Date().getTime() + MS_IN_DAY))
 				.withClaim(JWT_CLAIM_DBID, dbId)
 				.withClaim(JWT_CLAIM_EMAIL, email)
 				.sign(jwtAlgorithm);
