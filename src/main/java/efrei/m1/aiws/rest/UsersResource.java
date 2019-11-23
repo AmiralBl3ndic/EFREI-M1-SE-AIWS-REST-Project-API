@@ -2,12 +2,14 @@ package efrei.m1.aiws.rest;
 
 import static efrei.m1.aiws.utils.Constants.*;
 
+import efrei.m1.aiws.dao.DAOException;
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
 import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
 
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
+import efrei.m1.aiws.service.AuthenticationService;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Setter;
 
@@ -15,7 +17,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Variant;
 
 @Path("/users")
 public class UsersResource {
@@ -107,5 +108,51 @@ public class UsersResource {
 		UsersResource.userDAO.delete(userToDelete);
 
 		return Response.status(Response.Status.NO_CONTENT).build();
+	}
+
+
+	@PUT
+	@JWTTokenNeeded
+	@Path("{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(JSONUsersPostRequest body, @PathParam("id") String userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
+		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
+		User userToUpdate = UsersResource.userDAO.findBy(userId);
+
+		// Check if the user record to update exists
+		if (userToUpdate == null) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		// Check if the client user record exists
+		if (clientUserRecord == null) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+
+		// Check if the user record to update is the one that the requests comes from
+		if (!clientUserRecord.getDbId().equals(userToUpdate.getDbId())) {
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+		}
+
+		// Update user record fields
+		userToUpdate.setEmail(body.getEmail());
+		userToUpdate.setPassword(AuthenticationService.hashWithBCrypt(body.getPassword()));
+		userToUpdate.setCity(body.getCity());
+
+		JSONUsersPostResponse res = new JSONUsersPostResponse();
+		res.setId(userToUpdate.getDbId());
+		res.setToken(JWTService.createToken(userToUpdate.getDbId(), userToUpdate.getEmail()));
+
+		// From this point, we know that the clients have the rights to update a record
+		try {
+			UsersResource.userDAO.update(userToUpdate);
+		} catch (DAOException e) {
+			res.setError("Cannot update record");
+			return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(res).build();
 	}
 }
