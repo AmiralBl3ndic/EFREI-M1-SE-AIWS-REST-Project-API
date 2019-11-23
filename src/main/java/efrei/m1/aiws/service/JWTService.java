@@ -110,4 +110,18 @@ public class JWTService {
 
 		return sb.toString();
 	}
+
+
+	/**
+	 * Extracts the token from the "Authorization header"
+	 * @param header "Authorization" header
+	 * @return Extracted token
+	 */
+	public static String extractTokenFromHeader(String header) {
+		if (header.isEmpty()) {
+			return "";
+		}
+
+		return header.substring("Bearer".length()).trim();
+	}
 }

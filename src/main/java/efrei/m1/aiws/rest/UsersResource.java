@@ -7,12 +7,15 @@ import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
 import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
 
+import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Setter;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Variant;
 
 @Path("/users")
 public class UsersResource {
@@ -73,5 +76,36 @@ public class UsersResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(@FormParam("email") String email, @FormParam("password") String password, @FormParam("city") String city) {
 		return this.processPOST(email, password, city);
+	}
+
+
+	@DELETE
+	@JWTTokenNeeded
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteUser(@PathParam("id") String userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
+		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
+		User userToDelete = UsersResource.userDAO.findBy(userId);
+
+		// Check if the user record to delete exists
+		if (userToDelete == null) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		// Check if the client user record exists
+		if (clientUserRecord == null) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+
+		// Check if the user record to delete is the one that the requests comes from
+		if (!clientUserRecord.getDbId().equals(userToDelete.getDbId())) {
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+		}
+
+		// From this point, we know that the clients have the rights to delete a record
+		UsersResource.userDAO.delete(userToDelete);
+
+		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 }
