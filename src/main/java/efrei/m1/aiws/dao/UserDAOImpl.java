@@ -1,6 +1,7 @@
 package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.User;
+import efrei.m1.aiws.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,8 +34,11 @@ public class UserDAOImpl implements DAO<User> {
 		try {
 			connection = this.daoFactory.getConnection();
 
+			final String userEmail = user.getEmail();
+			final String userHashedPassword = AuthenticationService.hashWithBCrypt(user.getPassword());
+
 			// Insert query
-			preparedStatement= DAOUtils.initPreparedStatement(connection,SQL_INSERT_USER, true, user.getEmail(), user.getPassword());
+			preparedStatement= DAOUtils.initPreparedStatement(connection, SQL_INSERT_USER, true, userEmail, userHashedPassword);
 			int status = preparedStatement.executeUpdate();
 
 			if (status == 0) {
@@ -84,7 +88,7 @@ public class UserDAOImpl implements DAO<User> {
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 
-		// Cshecking if the user exists in the database
+		// Checking if the user exists in the database
 		if(user.getDbId() == null || user.getDbId().isEmpty()) {
 			throw new DAOException("Could not delete the user, id not found");
 		}
