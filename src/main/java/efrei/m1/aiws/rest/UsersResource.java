@@ -8,11 +8,16 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/users")
 public class UsersResource {
+
+	private JSONUsersPostResponse processPOST(String email, String password, String city) {
+		return null;
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public JSONUsersPostResponse createUser(JSONUsersPostRequest body) {
-		return null;
+		return this.processPOST(body.getEmail(), body.getPassword(), body.getCity());
 	}
 
 
@@ -20,6 +25,6 @@ public class UsersResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public JSONUsersPostResponse createUser(@FormParam("email") String email, @FormParam("password") String password, @FormParam("city") String city) {
-		return null;
+		return this.processPOST(email, password, city);
 	}
 }
