@@ -5,6 +5,7 @@ import efrei.m1.aiws.dao.DAOFactory;
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.rest.UsersResource;
 import efrei.m1.aiws.service.AuthenticationService;
+import efrei.m1.aiws.service.JWTService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -38,6 +39,9 @@ public class DAOInitializer implements ServletContextListener {
 
 		// Context Dependency Injection for AuthenticationService
 		AuthenticationService.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
+
+		// Context Dependency Injection for JWTService
+		JWTService.setUserDAO(daoFactory.getUserDao());
 
 		// Context Dependency Injection for UsersResource
 		UsersResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
