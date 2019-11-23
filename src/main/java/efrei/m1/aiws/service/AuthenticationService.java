@@ -1,6 +1,8 @@
 package efrei.m1.aiws.service;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import efrei.m1.aiws.dao.UserDAOImpl;
+import efrei.m1.aiws.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.security.SecureRandom;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthenticationService {
+	private static UserDAOImpl userDAO;
+
 	private static final int HASH_COST = 12;
 
 	/**
@@ -30,5 +34,25 @@ public class AuthenticationService {
 	 */
 	public static boolean compareToBCryptHash(final String candidate, final String hash) {
 		return BCrypt.verifyer().verify(candidate.toCharArray(), hash).verified;
+	}
+
+	/**
+	 * Authenticate a user from database users
+	 * @param email Email of the user to authenticate
+	 * @param password Password of the user to authenticates
+	 * @return {@link User} record corresponding to authenticated user, {@code null} if no record found or if password do not match
+	 */
+	public static User authenticateUser(final String email, final String password) {
+		User user = userDAO.findByEmail(email);
+
+		if (user != null) {  // Check if a user record with passed in email was found
+			// Check if passwords match
+			if (AuthenticationService.compareToBCryptHash(password, user.getPassword())) {
+				return user;
+			}
+		}
+
+		// If no user found
+		return null;
 	}
 }
