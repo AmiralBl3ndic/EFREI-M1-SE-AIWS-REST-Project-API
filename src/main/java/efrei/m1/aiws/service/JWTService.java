@@ -4,6 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import efrei.m1.aiws.dao.DAO;
+import efrei.m1.aiws.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +18,11 @@ import java.security.SecureRandom;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JWTService {
+	///region User model CDI
+	@Setter
+	private static DAO<User> userDAO;
+	///endregion
+
 	///region JWT Context Dependency Injection
 	@Setter
 	private static Algorithm jwtAlgorithm;
@@ -63,6 +71,26 @@ public class JWTService {
 			return false;
 		}
 	}
+
+
+	/**
+	 * Get the {@link User} object associated to the token (if legit token)
+	 * @param token String to be considered as a {@link JWT} token
+	 * @return {@link User} object associated to the token (if legit token), {@code null} otherwise
+	 */
+	public static User getUserFromToken(String token) {
+		User user = null;
+
+		if (!JWTService.isTokenLegit(token)) {
+			return null;
+		}
+
+		DecodedJWT decodedToken = JWT.decode(token);
+		user = JWTService.userDAO.findBy(decodedToken.getClaim(JWT_CLAIM_DBID).asString());
+
+		return user;
+	}
+
 
 	/**
 	 * Securely generates a random alphanumerics string of random length to serve as a secret
