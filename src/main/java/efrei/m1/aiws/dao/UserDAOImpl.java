@@ -112,25 +112,43 @@ public class UserDAOImpl implements DAO<User> {
 
 	@Override
 	public User findBy(String id) {
+		return selectBy(SQL_SELECT_BY_ID, id);
+	}
+
+	/**
+	 * Select a {@link User} record from the database based upon its {@code email}
+	 * @param email Email of the user to get from the database
+	 * @return {@code null} if no {@link User} found, {@link User} record matching email otherwise
+	 */
+	public User findByEmail(String email) {
+		return selectBy(SQL_SELECT_BY_EMAIL, email);
+	}
+
+	/**
+	 * Generic function allowing to select a {@link User} from the database based upon different criteria
+	 * @param sqlQuerySelector SQL Query string (with a single parameter to be set by a {@link PreparedStatement})
+	 * @param value Value of the parameter to be set by a {@link PreparedStatement}
+	 * @return {@code null} if no {@link User} found, {@link User} record matching criterion otherwise
+	 */
+	private User selectBy(String sqlQuerySelector, String value) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		User user = null;
 
 		try {
-			connection=this.daoFactory.getConnection();
-			preparedStatement=DAOUtils.initPreparedStatement(connection,SQL_SELECT_BY_ID,false,id);
-			resultSet=preparedStatement.executeQuery();
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
+			resultSet = preparedStatement.executeQuery();
 
-			//result set not empty
-
-			if(resultSet.next()) {
+			// If the result set is not empty
+			if (resultSet.next()) {
 				user = DAOUtils.mappingUser(resultSet);
 			}
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			throw new DAOException(e);
 		} finally {
-			DAOUtils.silentClose(resultSet,preparedStatement,connection);
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 
 		return user;
