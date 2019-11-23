@@ -14,5 +14,9 @@ public class Constants {
 	///region Authentication
 	public static final String AUTH_ERROR_WRONG_CREDENTIALS = "Wrong email/password";
 	///endregion
+
+	///region Users
+	public static final String USERS_ERROR_EMPTY_FIELDS = "Unable to perform request: fields 'email', 'password' and 'city' must be set and not empty";
+	///endregion
 	///endregion
 }
