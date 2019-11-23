@@ -9,4 +9,10 @@ public class Constants {
 	public static final String INIT_PARAM_JWT_ISSUER = "jwtIssuer";
 	public static final String INIT_PARAM_DB_PROPERTIES = "dbProperties";
 	///endregion
+
+	///region Error messages
+	///region Authentication
+	public static final String AUTH_ERROR_WRONG_CREDENTIALS = "Wrong email/password";
+	///endregion
+	///endregion
 }
