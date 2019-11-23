@@ -32,7 +32,7 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		String token = authorizationHeader.substring("Bearer".length()).trim();
+		String token = JWTService.extractTokenFromHeader(authorizationHeader);
 
 		// Verify if token is empty or not legit (wrong signature), if so, block the request
 		if (token.isEmpty() || !JWTService.isTokenLegit(token)) {
