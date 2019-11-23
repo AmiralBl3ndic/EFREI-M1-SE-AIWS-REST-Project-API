@@ -3,6 +3,7 @@ package efrei.m1.aiws.config;
 import efrei.m1.aiws.dao.DAOConfigurationException;
 import efrei.m1.aiws.dao.DAOFactory;
 import efrei.m1.aiws.dao.UserDAOImpl;
+import efrei.m1.aiws.rest.UsersResource;
 import efrei.m1.aiws.service.AuthenticationService;
 
 import javax.servlet.ServletContext;
@@ -37,6 +38,9 @@ public class DAOInitializer implements ServletContextListener {
 
 		// Context Dependency Injection for AuthenticationService
 		AuthenticationService.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
+
+		// Context Dependency Injection for UsersResource
+		UsersResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
 	}
 
 	@Override

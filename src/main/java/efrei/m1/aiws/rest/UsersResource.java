@@ -2,9 +2,12 @@ package efrei.m1.aiws.rest;
 
 import static efrei.m1.aiws.utils.Constants.*;
 
+import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
 import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
+
+import lombok.Setter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,6 +15,10 @@ import javax.ws.rs.core.Response;
 
 @Path("/users")
 public class UsersResource {
+
+	@Setter
+	private static UserDAOImpl userDAO;
+
 	/**
 	 * Processes a POST request ({@link User} database records creation)
 	 * @param email Email of the {@link User} to create
