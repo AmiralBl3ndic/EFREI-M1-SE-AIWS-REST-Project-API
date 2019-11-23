@@ -1,5 +1,7 @@
 package efrei.m1.aiws.rest;
 
+import static efrei.m1.aiws.utils.Constants.*;
+
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
 import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
@@ -19,6 +21,17 @@ public class UsersResource {
 	 */
 	private Response processPOST(String email, String password, String city) {
 		JSONUsersPostResponse res = new JSONUsersPostResponse();
+
+		// Check if any field is empty
+		if (email.isEmpty() || password.isEmpty() || city.isEmpty()) {
+			res.setError(USERS_ERROR_EMPTY_FIELDS);
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+		}
+
+		User user = new User();
+		user.setEmail(email);
+		user.setPassword(password);
+		user.setCity(city);
 
 		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
