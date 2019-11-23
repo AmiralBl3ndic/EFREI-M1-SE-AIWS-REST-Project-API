@@ -5,6 +5,7 @@ import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.security.SecureRandom;
 
@@ -13,6 +14,7 @@ import java.security.SecureRandom;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthenticationService {
+	@Setter
 	private static UserDAOImpl userDAO;
 
 	private static final int HASH_COST = 12;
