@@ -21,4 +21,14 @@ public class AuthenticationService {
 	public static String hashWithBCrypt(final String stringToHash) {
 		return BCrypt.with(new SecureRandom()).hashToString(HASH_COST, stringToHash.toCharArray());
 	}
+
+	/**
+	 * Compare a string against a BCrypt hash to check if they match
+	 * @param candidate String to verify against the hash
+	 * @param hash BCrypt hash to verify against
+	 * @return Whether the passed {@code candidate} matches the BCrypt {@code hash}
+	 */
+	public static boolean compareToBCryptHash(final String candidate, final String hash) {
+		return BCrypt.verifyer().verify(candidate.toCharArray(), hash).verified;
+	}
 }
