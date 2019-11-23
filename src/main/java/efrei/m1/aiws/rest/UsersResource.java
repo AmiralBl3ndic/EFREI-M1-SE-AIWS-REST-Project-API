@@ -117,7 +117,9 @@ public class UsersResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(JSONUsersPostRequest body) {
+	public Response createUser(
+		JSONUsersPostRequest body)
+	{
 		return this.processPOST(body.getEmail(), body.getPassword(), body.getCity());
 	}
 
@@ -125,7 +127,11 @@ public class UsersResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(@FormParam("email") String email, @FormParam("password") String password, @FormParam("city") String city) {
+	public Response createUser(
+		@FormParam("email") String email,
+		@FormParam("password") String password,
+		@FormParam("city") String city)
+	{
 		return this.processPOST(email, password, city);
 	}
 
@@ -134,7 +140,10 @@ public class UsersResource {
 	@JWTTokenNeeded
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteUser(@PathParam("id") String userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+	public Response deleteUser(
+		@PathParam("id") String userId,
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+	{
 		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
 		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
 		User userToDelete = UsersResource.userDAO.findBy(userId);
@@ -166,7 +175,27 @@ public class UsersResource {
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateUser(JSONUsersPostRequest body, @PathParam("id") String userId, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+	public Response updateUser(
+		JSONUsersPostRequest body,
+		@PathParam("id") String userId,
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+	{
 		return this.processPUT(authorizationHeader, userId, body.getEmail(), body.getPassword(), body.getCity());
+	}
+
+
+	@PUT
+	@JWTTokenNeeded
+	@Path("{id}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(
+		@FormParam("email") String email,
+		@FormParam("password") String password,
+		@FormParam("city") String city,
+		@PathParam("id") String userId,
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+	{
+		return this.processPUT(authorizationHeader, userId, email, password, city);
 	}
 }
