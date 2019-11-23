@@ -17,7 +17,8 @@ public class UserDAOImpl implements DAO<User> {
 	static final String DB_COL_PASSWORD="PASSWORD";
 
 	//Queries
-	private static final String SQL_SELECT_BY_ID="SELECT ID, EMAIL FROM USERS WHERE ID_USER=?";
+	private static final String SQL_SELECT_BY_ID="SELECT ID_USER, EMAIL, PASSWORD FROM USERS WHERE ID_USER=?";
+	private static final String SQL_SELECT_BY_EMAIL="SELECT ID_USER, EMAIL, PASSWORD FROM USERS WHERE EMAIL=?";
 	private static final String SQL_INSERT_USER="INSERT INTO USERS(EMAIL, PASSWORD) VALUES (?,?)";
 	private static final String SQL_UPDATE_USER="UPDATE USERS SET EMAIL = ?, PASSWORD = ? WHERE ID_USER = ?";
 	private static final String DELETE_USER="DELETE FROM USERS WHERE ID_USER=?";
