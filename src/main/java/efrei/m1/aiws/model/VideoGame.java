@@ -11,9 +11,9 @@ public class VideoGame {
 	private static final int MINIMUM_RATING = 0;
 	private static final int MAXIMUM_RATING = 5;
 
-	private int videoGameId;
+	private String videoGameId;
 
-	private int userId;
+	private String userId;
 
 	private String name;
 
@@ -34,7 +34,7 @@ public class VideoGame {
 		}
 	}
 
-	public VideoGame(int videoGameId, int userId, String name, String type, String resume, String editor, String releaseDate, int rating) {
+	public VideoGame(String videoGameId, String userId, String name, String type, String resume, String editor, String releaseDate, int rating) {
 		this.videoGameId = videoGameId;
 		this.userId = userId;
 		this.name = name;

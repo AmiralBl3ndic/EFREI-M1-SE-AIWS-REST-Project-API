@@ -1,6 +1,7 @@
 package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.User;
+import efrei.m1.aiws.model.VideoGame;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static efrei.m1.aiws.dao.UserDAOImpl.*;
+import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 
 /**
  * Static class to handle multiple DAO-related repetitive actions
@@ -56,6 +58,19 @@ public class DAOUtils {
 		user.setPassword(resultSet.getString(DB_COL_PASSWORD));
 		user.setCity(resultSet.getString(DB_COL_CITY));
 		return user;
+	}
+
+	public static VideoGame mappingVideoGame(@NonNull ResultSet resultSet) throws  SQLException{
+		VideoGame videoGame = new VideoGame();
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_VG));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_USER));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_NAME));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_TYPE));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_RESUME));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_EDITOR));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_RELEASEDATE));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_VG_RATING));
+		return videoGame;
 	}
 
 	///region silentClose
