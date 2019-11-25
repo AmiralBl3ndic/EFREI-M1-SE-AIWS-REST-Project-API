@@ -160,7 +160,7 @@ public class UsersResource {
 
 		// Check if the user record to delete is the one that the requests comes from
 		if (!clientUserRecord.getDbId().equals(userToDelete.getDbId())) {
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 
 		// From this point, we know that the clients have the rights to delete a record
