@@ -90,7 +90,7 @@ public class UsersResource {
 
 		// Check if the user record to update is the one that the requests comes from
 		if (!clientUserRecord.getDbId().equals(userToUpdate.getDbId())) {
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 
 		// Update user record fields
