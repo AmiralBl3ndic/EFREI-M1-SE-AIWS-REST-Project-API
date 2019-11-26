@@ -201,7 +201,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
