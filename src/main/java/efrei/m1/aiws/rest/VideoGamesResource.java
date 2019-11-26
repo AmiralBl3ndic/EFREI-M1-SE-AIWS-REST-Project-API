@@ -16,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,9 +39,9 @@ class VideoGameResourceRequest {
 class VideoGameResourceResponse {
 	private String error = "";
 
-	private List<VideoGame> items;
+	private List<VideoGame> items = new ArrayList<>();
 
-	public void addItem(VideoGame item) {
+	void addItem(VideoGame item) {
 		this.items.add(item);
 	}
 }
