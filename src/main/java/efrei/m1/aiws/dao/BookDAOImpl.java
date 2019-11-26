@@ -171,4 +171,28 @@ public class BookDAOImpl implements DAO<Book>
 
 		return books;
 	}
+
+	public Book findAll() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Book book = null;
+
+		try {
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
+			resultSet = preparedStatement.executeQuery();
+
+			if(resultSet.next()) {
+				book = DAOUtils.mappingBook(resultSet);
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+		}
+
+		return book;
+	}
 }
