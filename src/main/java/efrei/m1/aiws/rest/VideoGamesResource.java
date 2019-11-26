@@ -318,9 +318,27 @@ public class VideoGamesResource {
 	@JWTTokenNeeded
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteVideoGame(
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
 		@PathParam("id") String videoGameId
 	) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		VideoGame videoGame = videoGameDAO.findBy(videoGameId);
+
+		if (videoGame == null) {
+			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		// Check if user has the right to delete the resource
+		if (!userId.equals(videoGame.getUserId())) {
+			res.setError(VIDEOGAMES_ERROR_FORBIDDEN);
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+
+		// Actually delete the resource
+		videoGameDAO.delete(videoGame);
+		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 	///endregion
 }
