@@ -1,4 +1,5 @@
-package efrei.m1.aiws.model;
+pac
+		kage efrei.m1.aiws.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
