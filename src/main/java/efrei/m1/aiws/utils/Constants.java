@@ -21,5 +21,9 @@ public class Constants {
 	public static final String USERS_ERROR_CANNOT_CREATE = "Unable to create account with these credentials, they may already be in use";
 	public static final String USERS_ERROR_CANNOT_UPDATE = "Cannot update record";
 	///endregion
+
+	///region VideoGames
+	public static final String VIDEOGAMES_ERROR_NOT_FOUND = "Video-game not found";
+	///endregion
 	///endregion
 }
