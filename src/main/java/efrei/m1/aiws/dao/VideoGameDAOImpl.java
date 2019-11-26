@@ -6,10 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -133,10 +132,46 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 	@Override
 	public VideoGame findBy(String id) {
-		return selectBy(SQL_SELECT_BY_ID_VG, id);
+		List<VideoGame> candidates = null;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_ID_VG, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the video game's id", e);
+		}
+
+		return null;
 	}
 
-	private VideoGame selectBy(String sqlQuerySelector, String value) {
+	private List<VideoGame> selectBy(String sqlQuerySelector, String value) throws SQLException {
+		List<VideoGame> videogames = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
+		try {
+
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement((connection, sqlQuerySelector, false, value);
+			resultSet = preparedStatement.executeQuery();
+
+			while(resultSet.next()) {
+				videogames.add(DAOUtils.mappingVideoGame(resultSet));
+			}
+
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+
+		} catch(Exception e) {
+			throw new DAOException(e);
+		}
+
+		return videogames;
+	}
+
+	public VideoGame findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -144,41 +179,99 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 
-			if (resultSet.next()) {
+			if(resultSet.next()) {
 				videoGame = DAOUtils.mappingVideoGame(resultSet);
 			}
+
 		} catch (SQLException e) {
 			throw new DAOException(e);
 		} finally {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
+
 		return videoGame;
 	}
 
-	public VideoGame findbyAll(String id) {
-		return selectBy(SQL_SELECT_ALL, id);
-	}
-
+	@Override
 	public VideoGame findByUserID(String id) {
-		return selectBy(SQL_SELECT_BY_ID_USER, id);
+		List<VideoGame> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the user's id", e);
+		}
+
+		return null;
 	}
 
+	@Override
 	public VideoGame findByName(String id) {
-		return selectBy(SQL_SELECT_BY_NAME,id);
+		List<VideoGame> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by name", e);
+		}
+
+		return null;
 	}
 
+	@Override
 	public VideoGame findByType(String id) {
-		return selectBy(SQL_SELECT_BY_TYPE,id);
+		List<VideoGame> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by type", e);
+		}
+
+		return null;
 	}
 
+	@Override
 	public VideoGame findByEditor(String id) {
-		return selectBy(SQL_SELECT_BY_EDITOR,id);
+		List<VideoGame> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by editor", e);
+		}
+
+		return null;
 	}
 
+	@Override
 	public VideoGame findByReleaseDate(String id) {
-		return selectBy(SQL_SELECT_BY_RELEASEDATE,id);
+		List<VideoGame> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by release date", e);
+		}
+
+		return null;
 	}
 }

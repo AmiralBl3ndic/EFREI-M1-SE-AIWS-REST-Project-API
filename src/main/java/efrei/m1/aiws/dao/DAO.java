@@ -2,6 +2,8 @@ package efrei.m1.aiws.dao;
 
 import lombok.NonNull;
 
+import java.sql.SQLException;
+
 public interface DAO<T> {
 	/**
 	 * Creates an instance of passed object in the database
@@ -26,5 +28,5 @@ public interface DAO<T> {
 	 * @param db Database ID of the object to look for
 	 * @return {@code null} if no object found, Instance of object if found
 	 */
-	T findBy(String db);
+	T findBy(String db) throws SQLException;
 }
