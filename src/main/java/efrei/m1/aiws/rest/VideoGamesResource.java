@@ -160,7 +160,7 @@ public class VideoGamesResource {
 		} else {
 			res.setError("");
 			res.addItem(newRecord);
-			return Response.ok().entity(res).build();
+			return Response.status(Response.Status.CREATED).entity(res).build();
 		}
 	}
 
