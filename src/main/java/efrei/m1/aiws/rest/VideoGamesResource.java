@@ -70,14 +70,22 @@ public class VideoGamesResource {
 
 	/**
 	 * Get the comments of the video-game with database id {@code id}
-	 * @param id Database id of the video-game to get the comments of
+	 * @param videoGameId Database id of the video-game to get the comments of
 	 * @return List tof comments of a specific video-game record if it has a record in the database, {@code 404 NOT_FOUND} otherwise
 	 */
 	@GET
 	@Path("{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getVideoGameComments(@PathParam("id") String id) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	public Response getVideoGameComments(@PathParam("id") String videoGameId) {
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		VideoGame item = videoGameDAO.findBy(videoGameId);
+
+		if (item != null) {
+			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		} else {
+			return Response.status(Response.Status.NOT_IMPLEMENTED).entity(res).build();
+		}
 	}
 	///endregion
 
