@@ -172,19 +172,19 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return videogames;
 	}
 
-	public VideoGame findAll() {
+	public List<VideoGame> findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		VideoGame videoGame = null;
+		List<VideoGame> videoGames = new ArrayList<>();
 
 		try {
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 
-			if(resultSet.next()) {
-				videoGame = DAOUtils.mappingVideoGame(resultSet);
+			while(resultSet.next()) {
+				videoGames.add(DAOUtils.mappingVideoGame(resultSet));
 			}
 
 		} catch (SQLException e) {
@@ -193,7 +193,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 
-		return videoGame;
+		return videoGames;
 	}
 
 	public VideoGame findByUserID(String id) {
