@@ -1,5 +1,6 @@
 package efrei.m1.aiws.dao;
 
+import efrei.m1.aiws.model.Book;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
 import lombok.AccessLevel;
@@ -16,6 +17,8 @@ import java.util.logging.Logger;
 
 import static efrei.m1.aiws.dao.UserDAOImpl.*;
 import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
+import static efrei.m1.aiws.dao.BookDAOImpl.*;
+
 
 /**
  * Static class to handle multiple DAO-related repetitive actions
@@ -72,6 +75,21 @@ public class DAOUtils {
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_VG_RATING));
 		return videoGame;
 	}
+
+	public static Book mappingBook(@NonNull ResultSet resultSet) throws  SQLException {
+		Book book = new Book();
+		book.setBookId(resultSet.getString(DB_COL_BOOK_ID));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_USER_ID));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_AUTHOR));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_TITLE));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_TYPE));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_DESCRIPTION));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_EDITOR));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
+		return book;
+	}
+
 
 	///region silentClose
 
