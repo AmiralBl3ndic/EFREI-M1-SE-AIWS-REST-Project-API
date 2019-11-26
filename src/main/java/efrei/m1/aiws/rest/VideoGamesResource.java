@@ -131,4 +131,44 @@ public class VideoGamesResource {
 		return this.handlePostVideoGameComment();
 	}
 	///endregion
+
+
+	///region PUT requests
+	/**
+	 * Handle the {@code PUT} requests made to the /video-games/{id} endpoint
+	 * @return HTTP Response to send to the user
+	 */
+	private Response handlePutVideoGames(String videoGameId/* TODO: define and insert parameters */) {
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	}
+
+	/**
+	 * Handle the {@code PUT} requests made to the /video-games/{id} endpoint
+	 * @param videoGameId Database record id of the {@link VideoGame} to update
+	 * @param body JSON representation of the {@link VideoGame} to update
+	 * @return HTTP response to send to the user
+	 */
+	@PUT
+	@JWTTokenNeeded
+	@Path("{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putVideoGame(
+		@PathParam("id") String videoGameId,
+		Object body
+	) {
+		return this.handlePutVideoGames(videoGameId);
+	}
+
+	@PUT
+	@JWTTokenNeeded
+	@Path("{id}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putVideoGame(
+		@PathParam("id") String videoGameId
+	) {
+		return this.handlePutVideoGames(videoGameId);
+	}
+	///endregion
 }
