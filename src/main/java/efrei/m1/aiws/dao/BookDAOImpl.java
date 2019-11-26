@@ -34,6 +34,9 @@ public class BookDAOImpl implements DAO<Book>
 	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM BOOKS WHERE EDITOR = ?";
 	private static final String SQL_SELECT_BY_AGELIMIT = "SELECT * FROM BOOKS WHERE AGELIMIT = ?";
 	private static final String SQL_SELECT_BY_RATING = "SELECT * FROM BOOKS WHERE RATING = ?";
+	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_BOOK,ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR,AGELIMIT,RATING) VALUES (?,?,?,?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ?RATING = ?",
+	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
 	///endregion
 
 	private static final Logger logger = Logger.getLogger(BookDAOImpl.class.getName());
@@ -50,7 +53,16 @@ public class BookDAOImpl implements DAO<Book>
 
 		try {
 			final String bookID = book.getBookId();
+			final String userID = book.getUserId();
+			final String author = book.getAuthor();
+			final String title = book.getTitle();
+			final String type = book.getType();
+			final String description = book.getDescription();
+			final String releaseDate = book.getReleaseDate();
+			final String editor = book.getEditor();
+			final int rating = book.getRating();
 
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,book);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
