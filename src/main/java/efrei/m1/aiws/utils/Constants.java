@@ -26,7 +26,7 @@ public class Constants {
 	public static final String VIDEOGAMES_ERROR_NOT_FOUND = "Video-game not found";
 	public static final String VIDEOGAMES_ERROR_NOT_CREATED = "Unable to create video-game";
 	public static final String VIDEOGAMES_ERROR_NO_CLIENT_ACCOUNT = "Unable to find a valid account to create this resource";
-	public static final String VIDEOGAMES_ERROR_FORBIDDEN = "You cannot delete a record you haven't created";
+	public static final String VIDEOGAMES_ERROR_FORBIDDEN = "You cannot update or delete a record you haven't created";
 	///endregion
 	///endregion
 }
