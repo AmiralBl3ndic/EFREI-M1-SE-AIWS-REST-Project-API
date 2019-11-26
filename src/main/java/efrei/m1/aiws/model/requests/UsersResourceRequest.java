@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement
-public class JSONUsersPostRequest {
+public class UsersResourceRequest {
 	private String email = "";
 
 	private String password = "";

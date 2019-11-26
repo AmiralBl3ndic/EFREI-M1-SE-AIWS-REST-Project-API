@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement
-public class JSONUsersPostResponse {
+public class UsersResourceResponse {
 	private String id = "";
 
 	private String token = "";

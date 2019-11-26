@@ -5,8 +5,8 @@ import static efrei.m1.aiws.utils.Constants.*;
 import efrei.m1.aiws.dao.DAOException;
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.model.User;
-import efrei.m1.aiws.model.requests.JSONUsersPostRequest;
-import efrei.m1.aiws.model.requests.JSONUsersPostResponse;
+import efrei.m1.aiws.model.requests.UsersResourceRequest;
+import efrei.m1.aiws.model.requests.UsersResourceResponse;
 
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.AuthenticationService;
@@ -32,7 +32,7 @@ public class UsersResource {
 	 * @return HTTP {@link Response} to send back to the client
 	 */
 	private Response processPOST(String email, String password, String city) {
-		JSONUsersPostResponse res = new JSONUsersPostResponse();
+		UsersResourceResponse res = new UsersResourceResponse();
 
 		// Check if any field is empty
 		if (email.isEmpty() || password.isEmpty() || city.isEmpty()) {
@@ -98,7 +98,7 @@ public class UsersResource {
 		userToUpdate.setPassword(AuthenticationService.hashWithBCrypt(password));
 		userToUpdate.setCity(city);
 
-		JSONUsersPostResponse res = new JSONUsersPostResponse();
+		UsersResourceResponse res = new UsersResourceResponse();
 		res.setId(userToUpdate.getDbId());
 		res.setToken(JWTService.createToken(userToUpdate.getDbId(), userToUpdate.getEmail()));
 
@@ -118,7 +118,7 @@ public class UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(
-		JSONUsersPostRequest body)
+		UsersResourceRequest body)
 	{
 		return this.processPOST(body.getEmail(), body.getPassword(), body.getCity());
 	}
@@ -176,7 +176,7 @@ public class UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateUser(
-		JSONUsersPostRequest body,
+		UsersResourceRequest body,
 		@PathParam("id") String userId,
 		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
 	{
