@@ -87,6 +87,7 @@ public class DAOUtils {
 		book.setBookId(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_EDITOR));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
+		book.setBookId(resultSet.getString(DB_COL_BOOK_RATING));
 		return book;
 	}
 
