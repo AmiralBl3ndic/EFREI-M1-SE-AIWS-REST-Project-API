@@ -195,7 +195,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return videoGame;
 	}
 
-	@Override
 	public VideoGame findByUserID(String id) {
 		List<VideoGame> candidates;
 		try {
@@ -211,7 +210,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return null;
 	}
 
-	@Override
 	public VideoGame findByName(String id) {
 		List<VideoGame> candidates;
 		try {
@@ -227,7 +225,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return null;
 	}
 
-	@Override
 	public VideoGame findByType(String id) {
 		List<VideoGame> candidates;
 		try {
@@ -243,7 +240,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return null;
 	}
 
-	@Override
 	public VideoGame findByEditor(String id) {
 		List<VideoGame> candidates;
 		try {
@@ -259,7 +255,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return null;
 	}
 
-	@Override
 	public VideoGame findByReleaseDate(String id) {
 		List<VideoGame> candidates;
 		try {
