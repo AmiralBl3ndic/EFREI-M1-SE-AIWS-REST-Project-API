@@ -155,7 +155,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement((connection, sqlQuerySelector, false, value);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
 			resultSet = preparedStatement.executeQuery();
 
 			while(resultSet.next()) {

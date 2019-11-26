@@ -161,6 +161,4 @@ public class UserDAOImpl implements DAO<User> {
 
 		return user;
 	}
-
-
 }
