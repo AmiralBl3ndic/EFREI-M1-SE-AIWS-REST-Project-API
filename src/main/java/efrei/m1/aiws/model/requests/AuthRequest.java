@@ -6,10 +6,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement
-public class JSONUsersPostResponse {
-	private String id = "";
+public class AuthRequest {
+	private String email = "";
 
-	private String token = "";
-
-	private String error = "";
+	private String password = "";
 }
