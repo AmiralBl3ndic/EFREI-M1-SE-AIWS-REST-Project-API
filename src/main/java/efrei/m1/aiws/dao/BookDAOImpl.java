@@ -133,7 +133,18 @@ public class BookDAOImpl implements DAO<Book>
 
 	@Override
 	public Book findBy(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_ID_BOOK, id);
 
+			if(candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch(SQLException e) {
+			logger.log(Level.WARNING, "unable to get candidates while selecting book records by the video game's ID", e);
+		}
+
+		return null;
 	}
 
 	private List<Book> selectBy(String sqlQuerySelector, String value) throws SQLException {
