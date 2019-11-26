@@ -4,6 +4,8 @@ import efrei.m1.aiws.model.User;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import efrei.m1.aiws.model.VideoGame;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -77,7 +79,13 @@ public class DAOFactory {
 	}
 
 
-	public DAO<User> getUserDao(){
+	public DAO<User> getUserDao()
+	{
 		return new UserDAOImpl(this);
+	}
+
+	public DAO<VideoGame> getVideoGameDao()
+	{
+		return new VideoGameDAOImpl(this);
 	}
 }
