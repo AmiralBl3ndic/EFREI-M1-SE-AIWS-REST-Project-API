@@ -39,7 +39,7 @@ public class Book
 		}
 	}
 
-	public Book(int userId, int bookId, String author, String title, String type, String description, String releaseDate, String editor, int ageLimit, int rating) {
+	public Book(String userId, String bookId, String author, String title, String type, String description, String releaseDate, String editor, int ageLimit, int rating) {
 		this.userId = userId;
 		this.bookId = bookId;
 		this.author = author;
