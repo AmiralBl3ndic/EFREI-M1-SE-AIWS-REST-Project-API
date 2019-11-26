@@ -28,6 +28,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	///endregion
 
 	///region SQL Queries
+	private static final String SQL_SELECT_ALL = "SELECT * FROM VIDEOGAMES";
 	private static final String SQL_SELECT_BY_ID_VG = "SELECT * FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_SELECT_BY_ID_USER = "SELECT * FROM VIDEOGAMES WHERE ID_USERS = ?";
 	private static final String SQL_SELECT_BY_NAME = "SELECT * FROM VIDEOGAMES WHERE NAME = ?";
@@ -155,6 +156,10 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 		return videoGame;
+	}
+
+	public VideoGame findbyAll(String id) {
+		return selectBy(SQL_SELECT_ALL, id);
 	}
 
 	public VideoGame findByUserID(String id) {
