@@ -2,6 +2,7 @@ package efrei.m1.aiws.dao;
 import lombok.NonNull;
 
 import java.awt.print.Book;
+import java.util.logging.Logger;
 
 public class BookDAOImpl implements DAO<Book>
 {
@@ -32,14 +33,10 @@ public class BookDAOImpl implements DAO<Book>
 	private static final String SQL_SELECT_BY_RATING = "SELECT * FROM BOOKS WHERE RATING = ?";
 	///endregion
 
+	private static final Logger logger = Logger.getLogger(BookDAOImpl.class.getName());
+	///endregion
 
-
-
-
-
-
-
-
+	private DAOFactory daoFactory;
 
 	@Override
 	public void create(@NonNull Book obj)
