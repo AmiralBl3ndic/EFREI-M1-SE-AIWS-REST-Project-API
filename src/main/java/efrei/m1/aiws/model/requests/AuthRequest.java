@@ -6,8 +6,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement
-public class JSONAuthPostResponse {
-	private String token = "";
+public class AuthRequest {
+	private String email = "";
 
-	private String error = "";
+	private String password = "";
 }
