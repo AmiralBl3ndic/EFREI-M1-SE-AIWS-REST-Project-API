@@ -95,7 +95,7 @@ public class BookDAOImpl implements DAO<Book>
 		PreparedStatement preparedStatement = null;
 
 		if(book.getBookId() == null) {
-			throw new DAOException("impossible to find the video game to update");
+			throw new DAOException("impossible to find the book to update");
 		}try {
 			connection = this.daoFactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_BOOK, true, book.getBookId(), book.getUserId(),book.getAuthor(),book.getTitle(), book.getType(),book.getDescription(), book.getReleaseDate(), book.getEditor(), book.getAgeLimit());
@@ -106,11 +106,28 @@ public class BookDAOImpl implements DAO<Book>
 		}
 	}
 
-
-
 	@Override
-	public void delete(@NonNull Book obj) {
+	public void delete(@NonNull Book book)
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
+		if(book.getBookId() == null) {
+			throw new DAOException("impossible to find the book to delete");
+		} try {
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection,SQL_DELETE_BOOK,false,book.getBookId());
+
+			int state = preparedStatement.executeUpdate();
+
+			if(state == 0){
+				throw new DAOException("impossible to delete the book");
+			}
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		} finally {
+				DAOUtils.silentClose(preparedStatement, connection);
+		}
 	}
 
 	@Override
