@@ -1,14 +1,31 @@
 package efrei.m1.aiws.rest;
 
+import static efrei.m1.aiws.utils.Constants.*;
+
 import efrei.m1.aiws.model.VideoGame;
 
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+
+@Data @NoArgsConstructor
+class VideoGameResourceResponse {
+	private String error = "";
+
+	private List<VideoGame> items;
+
+	public void addItem(VideoGame item) {
+		this.items.add(item);
+	}
+}
+
 
 @Path("/video-games")
 public class VideoGamesResource {
@@ -24,19 +41,31 @@ public class VideoGamesResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGames() {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		res.setItems(videoGameDAO.findAll());
+
+		return Response.ok().entity(res).build();
 	}
 
 	/**
 	 * Get the details of the video-game with database id {@code id}
-	 * @param id Database id of the video-game to get the details of
+	 * @param videoGameId Database id of the video-game to get the details of
 	 * @return Details of a specific video-game if it has a record in the database, {@code 404 NOT_FOUND} otherwise
 	 */
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getVideoGameDetails(@PathParam("id") String id) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	public Response getVideoGameDetails(@PathParam("id") String videoGameId) {
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		VideoGame item = videoGameDAO.findBy(videoGameId);
+
+		if (item != null) {
+			res.addItem(item);
+			return Response.ok().entity(res).build();
+		} else {
+			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
 	}
 
 	/**
