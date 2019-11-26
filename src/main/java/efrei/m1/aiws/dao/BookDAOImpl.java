@@ -29,6 +29,8 @@ public class BookDAOImpl implements DAO<Book>
 	static final String DB_COL_BOOK_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_BOOK_EDITOR = "EDITOR";
 	static final String DB_COL_BOOK_AGELIMIT = "AGELIMIT";
+	static final String DB_COL_BOOK_RATING = "RATING";
+
 	///endregion
 
 	///region SQL Queries
@@ -194,5 +196,95 @@ public class BookDAOImpl implements DAO<Book>
 		}
 
 		return book;
+	}
+
+	public Book findByUserID(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the user's id", e);
+		}
+
+		return null;
+	}
+
+	public Book findByAuthor(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_AUTHOR, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book author", e);
+		}
+
+		return null;
+	}
+
+	public Book findByTittle(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_TITLE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book title ", e);
+		}
+
+		return null;
+	}
+
+	public Book findByType(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book type ", e);
+		}
+
+		return null;
+	}
+
+	public Book findByReleaseDate(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book release date ", e);
+		}
+
+		return null;
+	}
+
+	public Book findByRate(String id) {
+		List<Book> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_RATING, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book rate ", e);
+		}
+
+		return null;
 	}
 }
