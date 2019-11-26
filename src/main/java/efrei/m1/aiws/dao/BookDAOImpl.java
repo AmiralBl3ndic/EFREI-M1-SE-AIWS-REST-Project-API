@@ -13,11 +13,12 @@ public class BookDAOImpl implements DAO<Book>
 	static final String DB_COL_DESCRIPTION = "DESCRIPTION";
 	static final String DB_COL_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_EDITOR = "EDITOR";
-	static final String DB_COL_AGELIMIT = "";
-	static final String DB_COL_BOOK_RATING = "";
+	static final String DB_COL_AGELIMIT = "AGELIMIT";
+	static final int DB_COL_BOOK_RATING = 0;
 
 	@Override
-	public void create(@NonNull Book obj) {
+	public void create(@NonNull Book obj)
+	{
 
 	}
 
