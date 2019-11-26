@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,16 +20,15 @@ public class BookDAOImpl implements DAO<Book>
 {
 	///region Class Properties
 	///region Database columns names
-	static final String DB_COL_ID_BOOK_ID = "ID_BOOK";
-	static final String DB_COL_USER_ID = "ID_USERS";
-	static final String DB_COL_AUTHOR = "AUTHOR";
-	static final String DB_COL_TITLE = "TITLE";
-	static final String DB_COL_TYPE = "TYPE";
-	static final String DB_COL_DESCRIPTION = "DESCRIPTION";
-	static final String DB_COL_RELEASEDATE = "RELEASEDATE";
-	static final String DB_COL_EDITOR = "EDITOR";
-	static final String DB_COL_AGELIMIT = "AGELIMIT";
-	static final int DB_COL_BOOK_RATING = 0;
+	static final String DB_COL_BOOK_ID = "ID_BOOK";
+	static final String DB_COL_BOOK_USER_ID = "ID_USERS";
+	static final String DB_COL_BOOK_AUTHOR = "AUTHOR";
+	static final String DB_COL_BOOK_TITLE = "TITLE";
+	static final String DB_COL_BOOK_TYPE = "TYPE";
+	static final String DB_COL_BOOK_DESCRIPTION = "DESCRIPTION";
+	static final String DB_COL_BOOK_RELEASEDATE = "RELEASEDATE";
+	static final String DB_COL_BOOK_EDITOR = "EDITOR";
+	static final String DB_COL_BOOK_AGELIMIT = "AGELIMIT";
 	///endregion
 
 	///region SQL Queries
@@ -131,7 +132,32 @@ public class BookDAOImpl implements DAO<Book>
 	}
 
 	@Override
-	public Book findBy(String db) {
-		return null;
+	public Book findBy(String id) {
+
+	}
+
+	private List<Book> selectBy(String sqlQuerySelector, String value) throws SQLException {
+		List<Book> books = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
+		try {
+
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
+			resultSet = preparedStatement.executeQuery();
+
+			while(resultSet.next()) {
+				books.add(DAOUtils.mappingBook(resultSet));
+			}
+
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+
+		} catch(Exception e) {
+			throw new DAOException(e);
+		}
+
+		return books;
 	}
 }
