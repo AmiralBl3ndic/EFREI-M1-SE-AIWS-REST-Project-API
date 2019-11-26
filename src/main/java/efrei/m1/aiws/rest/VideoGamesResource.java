@@ -1,6 +1,9 @@
 package efrei.m1.aiws.rest;
 
+import efrei.m1.aiws.model.VideoGame;
+
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
+import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import lombok.Setter;
 
 import javax.ws.rs.*;
@@ -46,6 +49,86 @@ public class VideoGamesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGameComments(@PathParam("id") String id) {
 		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	}
+	///endregion
+
+
+	///region POST requests
+	/**
+	 * Handle the {@code POST} requests made to the /video-games endpoint
+	 * @return HTTP Response to send to the user
+	 */
+	private Response handlePostVideoGames(/* TODO: define and insert parameters */) {
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	}
+
+	/**
+	 * Handle the {@code POST} requests made to the /video-games/{id}/comments endpoint
+	 * @return HTTP Response to send to the user
+	 */
+	private Response handlePostVideoGameComment(/* TODO: define and insert parameters */) {
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	}
+
+
+	/**
+	 * Creates a {@link VideoGame} record in the database from a {@code 'application/json'} content type
+	 * @param body JSON object containing the data needed to create a {@link VideoGame} record
+	 * @return HTTP Response to send to the user
+	 */
+	@POST
+	@JWTTokenNeeded
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postVideoGame(
+		/* TODO: create a simple class to hold the needed request parameters */
+		Object body
+	) {
+		return this.handlePostVideoGames();
+	}
+
+	/**
+	 * Creates a {@link VideoGame} record in the database from a {@code 'application/x-www-form-urlencoded'} content type
+	 * @return HTTP Response to send to the user
+	 */
+	@POST
+	@JWTTokenNeeded
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postVideoGame(
+		/* TODO: define all the needed parameters */
+	) {
+		return this.handlePostVideoGames();
+	}
+
+	/**
+	 * Creates a {@link VideoGame} {@code comment} record in the database from a {@code 'application/json'} content type
+	 * @param body JSON object containing the data needed to create a {@link VideoGame} {@code comment} record
+	 * @return HTTP Response to send to the user
+	 */
+	@POST
+	@Path("{id}/comments")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postVideoGameComment(
+		/* TODO: create a simple class to hold the needed request parameters */
+		Object body
+	) {
+		return this.handlePostVideoGameComment();
+	}
+
+	/**
+	 * Creates a {@link VideoGame} {@code comment} record in the database from a {@code 'application/json'} content typ
+	 * @return HTTP Response to send to the user
+	 */
+	@POST
+	@Path("{id}/comments")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postVideoGameComment(
+		/* TODO: define all the needed parameters */
+	) {
+		return this.handlePostVideoGameComment();
 	}
 	///endregion
 }
