@@ -277,8 +277,39 @@ public class VideoGamesResource {
 	 * Handle the {@code PUT} requests made to the /video-games/{id} endpoint
 	 * @return HTTP Response to send to the user
 	 */
-	private Response handlePutVideoGames(String videoGameId/* TODO: define and insert parameters */) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	private Response handlePutVideoGames(
+		String authorizationHeader,
+		String videoGameId,
+		String name,
+		String type,
+		String resume,
+		String editor,
+		String releaseDate
+	) {
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		final String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		final VideoGame videoGame = videoGameDAO.findBy(videoGameId);
+
+		if (videoGame == null) {
+			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		if (!userId.equals(videoGame.getUserId())) {
+			res.setError(VIDEOGAMES_ERROR_FORBIDDEN);
+			return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+		}
+
+		// Update properties and update database record
+		videoGame.setName(name);
+		videoGame.setType(type);
+		videoGame.setResume(resume);
+		videoGame.setEditor(editor);
+		videoGame.setReleaseDate(releaseDate);
+		videoGameDAO.update(videoGame);
+
+		res.addItem(videoGame);
+		return Response.ok().entity(res).build();
 	}
 
 	/**
@@ -293,10 +324,19 @@ public class VideoGamesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putVideoGame(
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
 		@PathParam("id") String videoGameId,
-		Object body
+		VideoGameResourceRequest body
 	) {
-		return this.handlePutVideoGames(videoGameId);
+		return this.handlePutVideoGames(
+			authorizationHeader,
+			videoGameId,
+			body.getName(),
+			body.getType(),
+			body.getResume(),
+			body.getEditor(),
+			body.getReleaseDate()
+		);
 	}
 
 	@PUT
@@ -305,9 +345,23 @@ public class VideoGamesResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response putVideoGame(
-		@PathParam("id") String videoGameId
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("id") String videoGameId,
+		@FormParam("name") String name,
+		@FormParam("type") String type,
+		@FormParam("resume") String resume,
+		@FormParam("editor") String editor,
+		@FormParam("releaseDate") String releaseDate
 	) {
-		return this.handlePutVideoGames(videoGameId);
+		return this.handlePutVideoGames(
+			authorizationHeader,
+			videoGameId,
+			name,
+			type,
+			resume,
+			editor,
+			releaseDate
+		);
 	}
 	///endregion
 
