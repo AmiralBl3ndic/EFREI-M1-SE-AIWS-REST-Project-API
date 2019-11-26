@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data @NoArgsConstructor
-public class Book {
+public class Book
+{
 	private static final int DEFAULT_RATING = 0;
 	private static final int MINIMUM_RATING = 0;
 	private static final int MAXIMUM_RATING = 5;
@@ -27,8 +28,6 @@ public class Book {
 
 	private String editor;
 
-	private String platform;
-
 	private int ageLimit;
 
 	@Setter(AccessLevel.NONE)
@@ -40,7 +39,7 @@ public class Book {
 		}
 	}
 
-	public Book(int userId, int bookId, String author, String title, String type, String description, String releaseDate, String editor, String platform, int ageLimit, int rating) {
+	public Book(int userId, int bookId, String author, String title, String type, String description, String releaseDate, String editor, int ageLimit, int rating) {
 		this.userId = userId;
 		this.bookId = bookId;
 		this.author = author;
@@ -49,7 +48,6 @@ public class Book {
 		this.description = description;
 		this.releaseDate = releaseDate;
 		this.editor = editor;
-		this.platform = platform;
 		this.ageLimit = ageLimit;
 		this.rating = rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING ? rating : DEFAULT_RATING;
 	}
