@@ -28,5 +28,5 @@ public interface DAO<T> {
 	 * @param db Database ID of the object to look for
 	 * @return {@code null} if no object found, Instance of object if found
 	 */
-	T findBy(String db) throws SQLException;
+	T findBy(String db);
 }
