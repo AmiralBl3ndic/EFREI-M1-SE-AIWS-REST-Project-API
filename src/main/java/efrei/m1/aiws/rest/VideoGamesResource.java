@@ -171,4 +171,17 @@ public class VideoGamesResource {
 		return this.handlePutVideoGames(videoGameId);
 	}
 	///endregion
+
+
+	///region DELETE requests
+	@DELETE
+	@Path("{id}")
+	@JWTTokenNeeded
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteVideoGame(
+		@PathParam("id") String videoGameId
+	) {
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	}
+	///endregion
 }
