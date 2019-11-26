@@ -87,9 +87,9 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		if (videoGame.getVideoGameId() == null)
+		if (videoGame.getVideoGameId() == null) {
 			throw new DAOException("impossible to find the video game to update :( ");
-
+		}
 		try {
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getVideoGameId(), videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate(), videoGame.getRating());

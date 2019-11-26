@@ -90,9 +90,23 @@ public class BookDAOImpl implements DAO<Book>
 	}
 
 	@Override
-	public void update(@NonNull Book obj) {
+	public void update(@NonNull Book book) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
+		if(book.getBookId() == null) {
+			throw new DAOException("impossible to find the video game to update");
+		}try {
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_BOOK, true, book.getBookId(), book.getUserId(),book.getAuthor(),book.getTitle(), book.getType(),book.getDescription(), book.getReleaseDate(), book.getEditor(), book.getAgeLimit());
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(preparedStatement, connection);
+		}
 	}
+
+
 
 	@Override
 	public void delete(@NonNull Book obj) {
