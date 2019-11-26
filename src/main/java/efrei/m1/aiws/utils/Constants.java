@@ -24,6 +24,8 @@ public class Constants {
 
 	///region VideoGames
 	public static final String VIDEOGAMES_ERROR_NOT_FOUND = "Video-game not found";
+	public static final String VIDEOGAMES_ERROR_NOT_CREATED = "Unable to create video-game";
+	public static final String VIDEOGAMES_ERROR_NO_CLIENT_ACCOUNT = "Unable to find a valid account to create this resource";
 	///endregion
 	///endregion
 }

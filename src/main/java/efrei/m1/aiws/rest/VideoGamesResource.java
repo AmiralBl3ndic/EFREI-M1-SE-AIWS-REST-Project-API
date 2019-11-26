@@ -2,19 +2,38 @@ package efrei.m1.aiws.rest;
 
 import static efrei.m1.aiws.utils.Constants.*;
 
+import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
 
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
+import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+/**
+ * Simple class to represent the incoming HTTP Request JSON Object
+ */
+@Data @NoArgsConstructor
+class VideoGameResourceRequest {
+	private String userId;
+	private String name;
+	private String type;
+	private String resume;
+	private String editor;
+	private String releaseDate;
+}
+
+/**
+ * Simple class to represent the outgoing HTTP Response JSON Object
+ */
 @Data @NoArgsConstructor
 class VideoGameResourceResponse {
 	private String error = "";
@@ -32,6 +51,24 @@ public class VideoGamesResource {
 
 	@Setter
 	private static VideoGameDAOImpl videoGameDAO;
+
+	/**
+	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
+	 * @param authorizationHeader {@code Authorization} HTTP header value
+	 * @return User id associated with the passed in Authorization HTTP header (JWT token)
+	 */
+	private String getUserIdFromAuthorizationHeader(String authorizationHeader) {
+		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
+		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
+
+		// The following check should never be true
+		if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
+			return "";
+		}
+
+		return clientUserRecord.getDbId();
+	}
+
 
 	///region GET requests
 	/**
@@ -93,10 +130,37 @@ public class VideoGamesResource {
 	///region POST requests
 	/**
 	 * Handle the {@code POST} requests made to the /video-games endpoint
+	 * @param userId Database id of the user that creates the record
 	 * @return HTTP Response to send to the user
 	 */
-	private Response handlePostVideoGames(/* TODO: define and insert parameters */) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	private Response handlePostVideoGames(
+		String userId,
+		String name,
+		String type,
+		String resume,
+		String editor,
+		String releaseDate
+	) {
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		VideoGame newRecord = new VideoGame();
+
+		newRecord.setUserId(userId);
+		newRecord.setName(name);
+		newRecord.setType(type);
+		newRecord.setResume(resume);
+		newRecord.setEditor(editor);
+		newRecord.setReleaseDate(releaseDate);
+
+		videoGameDAO.create(newRecord);
+
+		if (newRecord.getVideoGameId() == null) {  // Check if request failed
+			res.setError(VIDEOGAMES_ERROR_NOT_CREATED);
+			return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
+		} else {
+			res.setError("");
+			res.addItem(newRecord);
+			return Response.ok().entity(res).build();
+		}
 	}
 
 	/**
@@ -118,10 +182,26 @@ public class VideoGamesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGame(
-		/* TODO: create a simple class to hold the needed request parameters */
-		Object body
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		VideoGameResourceRequest body
 	) {
-		return this.handlePostVideoGames();
+		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+
+		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
+		if (userId.isEmpty()) {
+			VideoGameResourceResponse res = new VideoGameResourceResponse();
+			res.setError(VIDEOGAMES_ERROR_NO_CLIENT_ACCOUNT);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+		}
+
+		return this.handlePostVideoGames(
+			userId,
+			body.getName(),
+			body.getType(),
+			body.getResume(),
+			body.getEditor(),
+			body.getReleaseDate()
+		);
 	}
 
 	/**
@@ -133,9 +213,30 @@ public class VideoGamesResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGame(
-		/* TODO: define all the needed parameters */
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@FormParam("name") String name,
+		@FormParam("type") String type,
+		@FormParam("resume") String resume,
+		@FormParam("editor") String editor,
+		@FormParam("releaseDate") String releaseDate
 	) {
-		return this.handlePostVideoGames();
+		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+
+		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
+		if (userId.isEmpty()) {
+			VideoGameResourceResponse res = new VideoGameResourceResponse();
+			res.setError(VIDEOGAMES_ERROR_NO_CLIENT_ACCOUNT);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+		}
+
+		return this.handlePostVideoGames(
+			userId,
+			name,
+			type,
+			resume,
+			editor,
+			releaseDate
+		);
 	}
 
 	/**
