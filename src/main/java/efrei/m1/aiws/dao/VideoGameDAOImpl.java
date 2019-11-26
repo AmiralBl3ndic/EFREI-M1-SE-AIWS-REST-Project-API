@@ -32,9 +32,9 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
     private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM VIDEOGAMES WHERE RELEASEDATE = ?";
     private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE, VG_RATING) VALUES (?,?,?,?,?,?,?,?)";
     private static final String SQL_UPTDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ?, VG_RATING = ? WHERE ID_VIDEO_GAME = ?";
-    private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VG = ?";
+    private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 
-    private static final Logger logger = Logger.getLogger(UserDAOImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(VideoGameDAOImpl.class.getName());
 
 
     private DAOFactory daofactory;
