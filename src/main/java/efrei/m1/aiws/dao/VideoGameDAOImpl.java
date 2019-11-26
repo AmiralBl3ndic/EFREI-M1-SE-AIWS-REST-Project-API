@@ -133,7 +133,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 	@Override
 	public VideoGame findBy(String id) {
-		List<VideoGame> candidates = null;
+		List<VideoGame> candidates;
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_VG, id);
 
