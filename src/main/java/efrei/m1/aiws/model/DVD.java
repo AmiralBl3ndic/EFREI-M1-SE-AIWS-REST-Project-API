@@ -11,13 +11,13 @@ public class DVD {
 	private static final int MINIMUM_RATING = 0;
 	private static final int MAXIMUM_RATING = 5;
 
-	private int dvdId;
+	private String dvdId;
 
-	private int userId;
+	private String userId;
 
-	private int ageLimit;
+	private String ageLimit;
 
-	private int duration;
+	private String duration;
 
 	private String title;
 
@@ -40,7 +40,7 @@ public class DVD {
 		}
 	}
 
-	public DVD(int dvdId, int userId, int ageLimit, int duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating) {
+	public DVD(String dvdId, String userId, String ageLimit, Stringuser duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating) {
 		this.dvdId = dvdId;
 		this.userId = userId;
 		this.ageLimit = ageLimit;
