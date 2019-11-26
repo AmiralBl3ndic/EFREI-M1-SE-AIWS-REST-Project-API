@@ -112,9 +112,9 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		if (videoGame.getVideoGameId() == null)
+		if (videoGame.getVideoGameId() == null) {
 			throw new DAOException("impossible to find the video game to delete :( ");
-
+		}
 		try {
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_DELETE_USER, false, videoGame.getVideoGameId());
