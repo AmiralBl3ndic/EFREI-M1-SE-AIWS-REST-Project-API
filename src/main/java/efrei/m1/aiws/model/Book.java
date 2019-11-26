@@ -12,9 +12,9 @@ public class Book
 	private static final int MINIMUM_RATING = 0;
 	private static final int MAXIMUM_RATING = 5;
 
-	private int bookId;
+	private String bookId;
 
-	private int userId;
+	private String userId;
 
 	private String author;
 
