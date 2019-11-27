@@ -29,7 +29,6 @@ public class BookDAOImpl implements DAO<Book>
 	static final String DB_COL_BOOK_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_BOOK_EDITOR = "EDITOR";
 	static final String DB_COL_BOOK_AGELIMIT = "AGELIMIT";
-	static final String DB_COL_BOOK_RATING = "RATING";
 
 	///endregion
 

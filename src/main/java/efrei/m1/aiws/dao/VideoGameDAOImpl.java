@@ -23,7 +23,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	static final String DB_COL_RESUME = "RESUME";
 	static final String DB_COL_EDITOR = "VIDEO_GAME_EDITOR";
 	static final String DB_COL_RELEASEDATE = "RELEASEDATE";
-	static final String DB_COL_VG_RATING = "VG_RATING";
 	///endregion
 
 	///region SQL Queries
