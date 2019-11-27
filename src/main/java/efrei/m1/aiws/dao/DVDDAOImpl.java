@@ -208,5 +208,21 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return dvd;
 	}
 
+	public DVD findByUserID(String id) {
+		List<DVD> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the user's id", e);
+		}
+
+		return null;
+	}
+
+
 
 }
