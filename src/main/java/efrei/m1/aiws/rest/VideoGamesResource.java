@@ -11,6 +11,7 @@ import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -80,12 +81,19 @@ public class VideoGamesResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGames(
-		@QueryParam("limit") String limitParam
+		@QueryParam("limit") String limitParam,
+		@QueryParam("keywords") String keywordsParam
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
 
 		ArrayList<VideoGame> videoGames = (ArrayList<VideoGame>) videoGameDAO.findAll();
 
+		// Handle "keywords" url parameter
+		if (keywordsParam != null && !keywordsParam.isEmpty()) {
+			videoGames.removeIf(videoGame -> FuzzySearch.weightedRatio(videoGame.getName(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
+		}
+
+		// Handle "limit" url parameter
 		if (limitParam != null) {
 			int limit;
 			try {
