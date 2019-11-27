@@ -17,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 
 @Path("/users")
 public class UsersResource {
@@ -73,7 +74,7 @@ public class UsersResource {
 	 * @param city City to set
 	 * @return HTTP {@link Response} to send back to the client
 	 */
-	private Response processPUT(String authorizationHeader, String userId, String email, String password, String city) {
+	private Response processPUT(String authorizationHeader, String userId, String email, String password, String city) throws SQLException {
 		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
 		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
 		User userToUpdate = UsersResource.userDAO.findBy(userId);
@@ -142,8 +143,7 @@ public class UsersResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
-	{
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
 		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
 		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
 		User userToDelete = UsersResource.userDAO.findBy(userId);
@@ -178,8 +178,7 @@ public class UsersResource {
 	public Response updateUser(
 		UsersResourceRequest body,
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
-	{
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
 		return this.processPUT(authorizationHeader, userId, body.getEmail(), body.getPassword(), body.getCity());
 	}
 
@@ -194,8 +193,7 @@ public class UsersResource {
 		@FormParam("password") String password,
 		@FormParam("city") String city,
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader)
-	{
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
 		return this.processPUT(authorizationHeader, userId, email, password, city);
 	}
 }
