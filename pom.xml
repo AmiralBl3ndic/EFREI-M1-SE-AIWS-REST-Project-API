@@ -63,6 +63,11 @@
             <artifactId>bcrypt</artifactId>
             <version>0.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>me.xdrop</groupId>
+            <artifactId>fuzzywuzzy</artifactId>
+            <version>1.2.0</version>
+        </dependency>
     </dependencies>
     
     <build>

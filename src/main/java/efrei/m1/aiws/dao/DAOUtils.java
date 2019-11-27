@@ -68,13 +68,12 @@ public class DAOUtils {
 	public static VideoGame mappingVideoGame(@NonNull ResultSet resultSet) throws  SQLException{
 		VideoGame videoGame = new VideoGame();
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_VG));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_USER));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_NAME));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_TYPE));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_RESUME));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_EDITOR));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_RELEASEDATE));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_VG_RATING));
+		videoGame.setUserId(resultSet.getString(DB_COL_ID_USER));
+		videoGame.setName(resultSet.getString(DB_COL_NAME));
+		videoGame.setType(resultSet.getString(DB_COL_TYPE));
+		videoGame.setResume(resultSet.getString(DB_COL_RESUME));
+		videoGame.setEditor(resultSet.getString(DB_COL_EDITOR));
+		videoGame.setReleaseDate(resultSet.getString(DB_COL_RELEASEDATE));
 		return videoGame;
 	}
 

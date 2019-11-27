@@ -23,7 +23,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	static final String DB_COL_RESUME = "RESUME";
 	static final String DB_COL_EDITOR = "VIDEO_GAME_EDITOR";
 	static final String DB_COL_RELEASEDATE = "RELEASEDATE";
-	static final String DB_COL_VG_RATING = "VG_RATING";
 	///endregion
 
 	///region SQL Queries
@@ -35,7 +34,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM VIDEOGAMES WHERE VIDEO_GAME_EDITOR = ?";
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM VIDEOGAMES WHERE RELEASEDATE = ?";
 	private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE, VG_RATING) VALUES (?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ?, VG_RATING = ? WHERE ID_VIDEO_GAME = ?";
+	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ?, VG_RATING = ? WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 	///endregion
 
@@ -92,7 +91,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		}
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getVideoGameId(), videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate(), videoGame.getRating());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate(), videoGame.getRating(), videoGame.getVideoGameId());
 
 			int state = preparedStatement.executeUpdate();
 
@@ -172,19 +171,19 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		return videogames;
 	}
 
-	public VideoGame findAll() {
+	public List<VideoGame> findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		VideoGame videoGame = null;
+		List<VideoGame> videoGames = new ArrayList<>();
 
 		try {
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 
-			if(resultSet.next()) {
-				videoGame = DAOUtils.mappingVideoGame(resultSet);
+			while(resultSet.next()) {
+				videoGames.add(DAOUtils.mappingVideoGame(resultSet));
 			}
 
 		} catch (SQLException e) {
@@ -193,7 +192,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 
-		return videoGame;
+		return videoGames;
 	}
 
 	public VideoGame findByUserID(String id) {
@@ -201,7 +200,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
