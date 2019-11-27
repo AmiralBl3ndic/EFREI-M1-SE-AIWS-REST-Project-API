@@ -81,11 +81,17 @@ public class VideoGamesResource {
 	public Response getVideoGames(
 		@QueryParam("limit") String limitParam,
 		@QueryParam("start") String startParam,
-		@QueryParam("keywords") String keywordsParam
+		@QueryParam("keywords") String keywordsParam,
+		@QueryParam("creator") String creatorParam
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
 
 		ArrayList<VideoGame> videoGames = (ArrayList<VideoGame>) videoGameDAO.findAll();
+
+		// Handle "creator" url parameter
+		if (creatorParam != null && !creatorParam.isEmpty()) {
+			videoGames.removeIf(videoGame -> !videoGame.getUserId().equals(creatorParam));
+		}
 
 		// Handle "keywords" url parameter
 		if (keywordsParam != null && !keywordsParam.isEmpty()) {
