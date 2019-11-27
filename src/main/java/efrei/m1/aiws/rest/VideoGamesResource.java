@@ -132,11 +132,10 @@ public class VideoGamesResource {
 
 	/**
 	 * Check whether an integer parameter is greater than 0 (so that it is usable)
-	 * @param videoGames List of {@link VideoGame}s
 	 * @param parameter {@link String} value of the parameter to check
 	 * @return Whether an integer parameter is greater than 0 (so that it is usable)
 	 */
-	private String isIntegerParameterValid(ArrayList<VideoGame> videoGames, String parameter) {
+	private String isIntegerParameterValid(String parameter) {
 		int paramValue;
 
 		try {
@@ -173,7 +172,7 @@ public class VideoGamesResource {
 
 		// Check if "start" url parameter can be used
 		if (startParam != null && !startParam.isEmpty()) {
-			res.setError(this.isIntegerParameterValid(videoGames, startParam));
+			res.setError(this.isIntegerParameterValid(startParam));
 			if (!res.getError().equals("")) {
 				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
 			}
@@ -181,7 +180,7 @@ public class VideoGamesResource {
 
 		// Check if "limit" url parameter can be used
 		if (limitParam != null && !limitParam.isEmpty()) {
-			res.setError(this.isIntegerParameterValid(videoGames, limitParam));
+			res.setError(this.isIntegerParameterValid(limitParam));
 			if (!res.getError().equals("")) {
 				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
 			}
