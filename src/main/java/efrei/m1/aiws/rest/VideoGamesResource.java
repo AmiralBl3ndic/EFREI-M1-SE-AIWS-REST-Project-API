@@ -17,6 +17,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -78,10 +79,33 @@ public class VideoGamesResource {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getVideoGames() {
+	public Response getVideoGames(
+		@QueryParam("limit") String limitParam
+	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
-		res.setItems(videoGameDAO.findAll());
 
+		ArrayList<VideoGame> videoGames = (ArrayList<VideoGame>) videoGameDAO.findAll();
+
+		if (limitParam != null) {
+			int limit;
+			try {
+				limit = Integer.parseInt(limitParam);
+			} catch (NumberFormatException e) {
+				res.setError(VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+			if (limit < 0) {
+				res.setError(VIDEOGAMES_ILLEGAL_FILTER_VALUE);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+			if (limit < videoGames.size()) {
+				videoGames = new ArrayList<>(videoGames.subList(0, limit));
+			}
+		}
+
+		res.setItems(videoGames);
 		return Response.ok().entity(res).build();
 	}
 
