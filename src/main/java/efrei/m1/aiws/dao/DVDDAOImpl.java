@@ -223,6 +223,49 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return null;
 	}
 
+	public DVD findByName(String id) {
+		List<DVD> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the name", e);
+		}
+
+		return null;
+	}
+
+	public DVD findByType(String id) {
+		List<DVD> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the type", e);
+		}
+
+		return null;
+	}
+
+
+	/*
+	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM DVDS WHERE EDITOR = ?";
+	private static final String SQL_SELECT_BY_AUDIO = "SELECT * FROM DVDS WHERE AUDIO = ?";
+	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM DVDS WHERE RELEASEDATE = ?";
+	private static final String SQL_SELECT_AGELIMIT = "SELECT * FROM DVDS WHERE AGELIMIT = ?";
+	private static final String SQL_SELECT_DURATION = "SELECT * FROM DVDS WHERE DURATION = ?";
+	private static final String SQL_SELECT_RATING = "SELECT * FROM DVDS WHERE RATING = ?";
+	private static final String SQL_INSERT_DVD = "INSERT INTO DVDS(ID_DVD,ID_USER,TITLE,TYPE,DESCRIPTION,EDITOR,AUDIO,RELEASEDATE,AGELIMIT,DURATION, RATING) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ?, RATING = ?";
+	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
+	*/
+
 
 
 }
