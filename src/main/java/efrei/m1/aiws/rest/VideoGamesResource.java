@@ -1,11 +1,8 @@
 package efrei.m1.aiws.rest;
 
-import static efrei.m1.aiws.utils.Constants.*;
-
+import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
-
-import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
@@ -18,8 +15,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static efrei.m1.aiws.utils.Constants.*;
 
 /**
  * Simple class to represent the incoming HTTP Request JSON Object

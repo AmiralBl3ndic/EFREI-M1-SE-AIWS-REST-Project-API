@@ -74,7 +74,6 @@ public class DAOUtils {
 		videoGame.setResume(resultSet.getString(DB_COL_RESUME));
 		videoGame.setEditor(resultSet.getString(DB_COL_EDITOR));
 		videoGame.setReleaseDate(resultSet.getString(DB_COL_RELEASEDATE));
-		videoGame.setRating(resultSet.getInt(DB_COL_VG_RATING));
 		return videoGame;
 	}
 
