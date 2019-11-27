@@ -95,7 +95,28 @@ public class DVDDAOImpl implements DAO<DVD> {
 	}
 
 	@Override
-	public void update(@NonNull DVD obj) {
+	public void update(@NonNull DVD dvd) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		if (dvd.getDvdId() == null) {
+			throw new DAOException("impossible to find the dvd to update");
+		}
+
+		try {
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_DVD, false, dvd.getDvdId(), dvd.getUserId(), dvd.getAgeLimit(), dvd.getDuration(), dvd.getTitle(), dvd.getType(), dvd.getDescription(), dvd.getEditor(), dvd.getAudio(), dvd.getReleaseDate(), dvd.getRating());
+
+			int state = preparedStatement.executeUpdate();
+
+			if (state == 0) {
+				throw new DAOException("error in the update of the video game");
+			}
+		} catch(SQLException e) {
+			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(preparedStatement,connection);
+		}
 
 	}
 
