@@ -184,4 +184,29 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return dvd;
 	}
 
+	public DVD findAll() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		DVD dvd = null;
+
+		try {
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
+			resultSet = preparedStatement.executeQuery();
+
+			if(resultSet.next()) {
+				dvd = DAOUtils.mappingDVD(resultSet);
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+		}
+
+		return dvd;
+	}
+
+
 }
