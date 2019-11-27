@@ -253,9 +253,23 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return null;
 	}
 
+	public DVD findByEditor(String id) {
+		List<DVD> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
+
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the editor", e);
+		}
+
+		return null;
+	}
+
 
 	/*
-	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM DVDS WHERE EDITOR = ?";
 	private static final String SQL_SELECT_BY_AUDIO = "SELECT * FROM DVDS WHERE AUDIO = ?";
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM DVDS WHERE RELEASEDATE = ?";
 	private static final String SQL_SELECT_AGELIMIT = "SELECT * FROM DVDS WHERE AGELIMIT = ?";
