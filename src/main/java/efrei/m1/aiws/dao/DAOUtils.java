@@ -68,12 +68,12 @@ public class DAOUtils {
 	public static VideoGame mappingVideoGame(@NonNull ResultSet resultSet) throws  SQLException{
 		VideoGame videoGame = new VideoGame();
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_VG));
-		videoGame.setUserId(resultSet.getString(DB_COL_ID_USER));
-		videoGame.setName(resultSet.getString(DB_COL_NAME));
-		videoGame.setType(resultSet.getString(DB_COL_TYPE));
-		videoGame.setResume(resultSet.getString(DB_COL_RESUME));
-		videoGame.setEditor(resultSet.getString(DB_COL_EDITOR));
-		videoGame.setReleaseDate(resultSet.getString(DB_COL_RELEASEDATE));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_ID_USER));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_NAME));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_TYPE));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_RESUME));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_EDITOR));
+		videoGame.setVideoGameId(resultSet.getString(DB_COL_RELEASEDATE));
 		return videoGame;
 	}
 
@@ -88,7 +88,6 @@ public class DAOUtils {
 		book.setBookId(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_EDITOR));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_RATING));
 		return book;
 	}
 
@@ -104,7 +103,6 @@ public class DAOUtils {
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RELEASEDATE));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AGELIMIT));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DURATION));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
 		return dvd;
 	}
 
