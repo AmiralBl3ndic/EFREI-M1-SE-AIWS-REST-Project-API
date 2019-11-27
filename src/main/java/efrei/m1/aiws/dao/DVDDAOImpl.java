@@ -30,7 +30,6 @@ public class DVDDAOImpl implements DAO<DVD> {
 	static final String DB_COL_DVD_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_DVD_AGELIMIT = "AGELIMIT";
 	static final String DB_COL_DVD_DURATION = "DURATION";
-	static final String DB_COL_DVD_RATING = "RATIONG";
 	///endregion
 
 	///region SQL QUERIES
