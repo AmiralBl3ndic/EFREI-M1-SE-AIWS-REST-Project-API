@@ -328,13 +328,18 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return null;
 	}
 
-	/*
-	private static final String SQL_SELECT_RATING = "SELECT * FROM DVDS WHERE RATING = ?";
-	private static final String SQL_INSERT_DVD = "INSERT INTO DVDS(ID_DVD,ID_USER,TITLE,TYPE,DESCRIPTION,EDITOR,AUDIO,RELEASEDATE,AGELIMIT,DURATION, RATING) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ?, RATING = ?";
-	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
-	*/
+	public DVD findByRating(String id) {
+		List<DVD> candidates;
+		try {
+			candidates = this.selectBy(SQL_SELECT_RATING, id);
 
+			if (candidates.size() >= 1) {
+				return candidates.get(0);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the rate", e);
+		}
 
-
+		return null;
+	}
 }
