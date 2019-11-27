@@ -110,19 +110,37 @@ public class DVDDAOImpl implements DAO<DVD> {
 			int state = preparedStatement.executeUpdate();
 
 			if (state == 0) {
-				throw new DAOException("error in the update of the video game");
+				throw new DAOException("error in the update of the dvd");
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e);
 		} finally {
 			DAOUtils.silentClose(preparedStatement,connection);
 		}
-
 	}
 
 	@Override
-	public void delete(@NonNull DVD obj) {
+	public void delete(@NonNull DVD dvd) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
+		if (dvd.getDvdId() == null) {
+			throw new DAOException("impossible to find the dvd to delete :( ");
+		}
+		try{
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_DELETE_USER, false, dvd.getDvdId());
+
+			int state = preparedStatement.executeUpdate();
+
+			if (state == 0) {
+				throw new DAOException("impossible to delete the dvd");
+			}
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(preparedStatement, connection);
+		}
 	}
 
 	@Override
