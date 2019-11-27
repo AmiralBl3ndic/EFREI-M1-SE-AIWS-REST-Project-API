@@ -74,25 +74,24 @@ public class VideoGamesResource {
 		return clientUserRecord.getDbId();
 	}
 
-
-	///region GET requests
 	/**
-	 * Get the list of all video-games records in the database
-	 * @return List of all video-games records in the database
+	 * Applies the requests URL parameters (that we call filters)
+	 * @param videoGames List of {@link VideoGame}s to perform the filtering on
+	 * @param limitParam Maximum number of items to return
+	 * @param startParam Minimum (inclusive) id of the records to return
+	 * @param keywordsParam Keywords to look for (records below {@code FUZZY_SEARCH_MATCH_THRESHOLD} similarity will be excluded)
+	 * @param creatorParam Id of the user who created the record
+	 * @param cityParam City to look for records in
+	 * @return List of {@link VideoGame}s that meet all the filters requirements
 	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getVideoGames(
-		@QueryParam("limit") String limitParam,
-		@QueryParam("start") String startParam,
-		@QueryParam("keywords") String keywordsParam,
-		@QueryParam("creator") String creatorParam,
-		@QueryParam("city") String cityParam
+	private ArrayList<VideoGame> applyGetUrlParameters(
+		ArrayList<VideoGame> videoGames,
+		String limitParam,
+		String startParam,
+		String keywordsParam,
+		String creatorParam,
+		String cityParam
 	) {
-		VideoGameResourceResponse res = new VideoGameResourceResponse();
-
-		ArrayList<VideoGame> videoGames = (ArrayList<VideoGame>) videoGameDAO.findAll();
-
 		// Handle "creator" url parameter
 		if (creatorParam != null && !creatorParam.isEmpty()) {
 			videoGames.removeIf(videoGame -> !videoGame.getUserId().equals(creatorParam));
@@ -118,44 +117,78 @@ public class VideoGamesResource {
 
 		// Handle "start" url parameter
 		if (startParam != null && !startParam.isEmpty()) {
-			// Check parameter value (must be of int type and greater than 0)
-			int start;
-			try {
-				start = Integer.parseInt(startParam);
-			} catch (NumberFormatException e) {
-				res.setError(VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT);
-				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-			}
-
-			if (start < 0) {
-				res.setError(VIDEOGAMES_ILLEGAL_FILTER_VALUE);
-				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-			}
-
-
-			videoGames.removeIf(videoGame -> Integer.parseInt(videoGame.getVideoGameId()) < start);
+			int minId = Integer.parseInt(startParam);
+			videoGames.removeIf(videoGame -> Integer.parseInt(videoGame.getVideoGameId()) < minId);
 		}
 
 		// Handle "limit" url parameter
-		if (limitParam != null) {
-			// Check parameter value (must be of int type and greater than 0)
-			int limit;
-			try {
-				limit = Integer.parseInt(limitParam);
-			} catch (NumberFormatException e) {
-				res.setError(VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT);
-				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-			}
+		if (limitParam != null && !limitParam.isEmpty()) {
+			int maxRecords = Integer.parseInt(limitParam);
+			videoGames = new ArrayList<>(videoGames.subList(0, maxRecords));
+		}
 
-			if (limit < 0) {
-				res.setError(VIDEOGAMES_ILLEGAL_FILTER_VALUE);
-				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-			}
+		return videoGames;
+	}
 
-			if (limit < videoGames.size()) {
-				videoGames = new ArrayList<>(videoGames.subList(0, limit));
+	/**
+	 * Check whether an integer parameter is greater than 0 (so that it is usable)
+	 * @param videoGames List of {@link VideoGame}s
+	 * @param parameter {@link String} value of the parameter to check
+	 * @return Whether an integer parameter is greater than 0 (so that it is usable)
+	 */
+	private String isIntegerParameterValid(ArrayList<VideoGame> videoGames, String parameter) {
+		int paramValue;
+
+		try {
+			paramValue = Integer.parseInt(parameter);
+		} catch (NumberFormatException e) {
+			return VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT;
+		}
+
+		if (paramValue < 0) {
+			return VIDEOGAMES_ILLEGAL_FILTER_VALUE;
+		}
+
+		return "";
+	}
+
+
+	///region GET requests
+	/**
+	 * Get the list of all video-games records in the database
+	 * @return List of all video-games records in the database
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getVideoGames(
+		@QueryParam("limit") String limitParam,
+		@QueryParam("start") String startParam,
+		@QueryParam("keywords") String keywordsParam,
+		@QueryParam("creator") String creatorParam,
+		@QueryParam("city") String cityParam
+	) {
+		VideoGameResourceResponse res = new VideoGameResourceResponse();
+
+		ArrayList<VideoGame> videoGames = (ArrayList<VideoGame>) videoGameDAO.findAll();
+
+		// Check if "start" url parameter can be used
+		if (startParam != null && !startParam.isEmpty()) {
+			res.setError(this.isIntegerParameterValid(videoGames, startParam));
+			if (!res.getError().equals("")) {
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
 			}
 		}
+
+		// Check if "limit" url parameter can be used
+		if (limitParam != null && !limitParam.isEmpty()) {
+			res.setError(this.isIntegerParameterValid(videoGames, limitParam));
+			if (!res.getError().equals("")) {
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+		}
+
+		// Apply filters
+		videoGames = this.applyGetUrlParameters(videoGames, limitParam, startParam, keywordsParam, creatorParam, cityParam);
 
 		res.setItems(videoGames);
 		return Response.ok().entity(res).build();
