@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.logging.Level;
@@ -74,7 +75,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 			final String releaseDate = dvd.getReleaseDate();
 			final int rating = dvd.getRating();
 
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_DVD, true, dvdId, userId, duration, title, type, description, editor, audio, releaseDate, rating);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_DVD, true, dvdId, userId,ageLimit, duration, title, type, description, editor, audio, releaseDate, rating);
 			int state = preparedStatement.executeUpdate();
 
 			if (state == 0) {
@@ -144,7 +145,32 @@ public class DVDDAOImpl implements DAO<DVD> {
 	}
 
 	@Override
-	public DVD findBy(String db) throws SQLException {
+	public DVD findBy(String id) {
 		return null;
 	}
+
+	private List<DVD> selectBy(String sqlQuerySelector, String value) throws SQLException {
+		List<DVD> dvd = new ArrayList<>();
+		Connection connection;
+		PreparedStatement preparedStatement;
+		ResultSet resultSet;
+
+		try {
+
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
+			resultSet = preparedStatement.executeQuery();
+
+			while(resultSet.next()) {
+				dvd.add(DAOUtils.mappingDVD(resultSet));
+			}
+
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+
+		} catch(Exception e) {
+			throw new DAOException(e);
+		}
+		return dvd;
+	}
+
 }
