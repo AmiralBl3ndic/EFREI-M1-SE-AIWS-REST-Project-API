@@ -74,7 +74,6 @@ public class DAOUtils {
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_RESUME));
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_EDITOR));
 		videoGame.setVideoGameId(resultSet.getString(DB_COL_RELEASEDATE));
-		videoGame.setVideoGameId(resultSet.getString(DB_COL_VG_RATING));
 		return videoGame;
 	}
 
@@ -89,7 +88,6 @@ public class DAOUtils {
 		book.setBookId(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_EDITOR));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_RATING));
 		return book;
 	}
 
@@ -105,7 +103,6 @@ public class DAOUtils {
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RELEASEDATE));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AGELIMIT));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DURATION));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
 		return dvd;
 	}
 
