@@ -10,6 +10,8 @@ public class Constants {
 	public static final String INIT_PARAM_DB_PROPERTIES = "dbProperties";
 	///endregion
 
+	public static final int FUZZY_SEARCH_MATCH_THRESHOLD = 70;
+
 	///region Error messages
 	///region Authentication
 	public static final String AUTH_ERROR_WRONG_CREDENTIALS = "Wrong email/password";
