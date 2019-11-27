@@ -33,8 +33,8 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	private static final String SQL_SELECT_BY_TYPE = "SELECT * FROM VIDEOGAMES WHERE TYPE = ?";
 	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM VIDEOGAMES WHERE VIDEO_GAME_EDITOR = ?";
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM VIDEOGAMES WHERE RELEASEDATE = ?";
-	private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE, VG_RATING) VALUES (?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ?, VG_RATING = ? WHERE ID_VIDEO_GAME = ?";
+	private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE) VALUES (?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ? WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 	///endregion
 
@@ -59,9 +59,8 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 			final String resume = videoGame.getResume();
 			final String editor = videoGame.getEditor();
 			final String releaseDate = videoGame.getReleaseDate();
-			final int rating = videoGame.getRating();
 
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_VIDEOGAME, true, videoGameID, userID, name, type, resume, editor, releaseDate, rating);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_VIDEOGAME, true, videoGameID, userID, name, type, resume, editor, releaseDate);
 			int state = preparedStatement.executeUpdate();
 
 			if (state == 0) {
@@ -91,7 +90,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		}
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getVideoGameId(), videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate(), videoGame.getRating());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getVideoGameId(), videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate());
 
 			int state = preparedStatement.executeUpdate();
 
