@@ -1,6 +1,7 @@
 package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.Book;
+import efrei.m1.aiws.model.DVD;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
 import lombok.AccessLevel;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import static efrei.m1.aiws.dao.UserDAOImpl.*;
 import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 import static efrei.m1.aiws.dao.BookDAOImpl.*;
+import static efrei.m1.aiws.dao.DVDDAOImpl.*;
 
 
 /**
@@ -89,6 +91,22 @@ public class DAOUtils {
 		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
 		book.setBookId(resultSet.getString(DB_COL_BOOK_RATING));
 		return book;
+	}
+
+	public static DVD mappingDVD(@NonNull ResultSet resultSet) throws SQLException {
+		DVD dvd = new DVD();
+		dvd.setDvdId(resultSet.getString(DB_COL_ID_DVD));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_ID_USER));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_TITLE));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_TYPE));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DESCRIPTION));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_EDITOR));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AUDIO));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RELEASEDATE));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AGELIMIT));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DURATION));
+		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
+		return dvd;
 	}
 
 
