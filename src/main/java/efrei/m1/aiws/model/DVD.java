@@ -40,7 +40,7 @@ public class DVD {
 		}
 	}
 
-	public DVD(String dvdId, String userId, String ageLimit, Stringuser duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating) {
+	public DVD(String dvdId, String userId, String ageLimit, String duration, String title, String type, String description, String editor, String audio, String releaseDate, int rating) {
 		this.dvdId = dvdId;
 		this.userId = userId;
 		this.ageLimit = ageLimit;
