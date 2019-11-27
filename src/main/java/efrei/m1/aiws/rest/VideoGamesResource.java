@@ -80,6 +80,7 @@ public class VideoGamesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGames(
 		@QueryParam("limit") String limitParam,
+		@QueryParam("start") String startParam,
 		@QueryParam("keywords") String keywordsParam
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
@@ -91,8 +92,29 @@ public class VideoGamesResource {
 			videoGames.removeIf(videoGame -> FuzzySearch.weightedRatio(videoGame.getName(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
 		}
 
+		// Handle "start" url parameter
+		if (startParam != null && !startParam.isEmpty()) {
+			// Check parameter value (must be of int type and greater than 0)
+			int start;
+			try {
+				start = Integer.parseInt(startParam);
+			} catch (NumberFormatException e) {
+				res.setError(VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+			if (start < 0) {
+				res.setError(VIDEOGAMES_ILLEGAL_FILTER_VALUE);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+
+			videoGames.removeIf(videoGame -> Integer.parseInt(videoGame.getVideoGameId()) < start);
+		}
+
 		// Handle "limit" url parameter
 		if (limitParam != null) {
+			// Check parameter value (must be of int type and greater than 0)
 			int limit;
 			try {
 				limit = Integer.parseInt(limitParam);
