@@ -1,5 +1,6 @@
 package efrei.m1.aiws.rest;
 
+import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
@@ -53,6 +54,9 @@ public class VideoGamesResource {
 	@Setter
 	private static VideoGameDAOImpl videoGameDAO;
 
+	@Setter
+	private static UserDAOImpl userDAO;
+
 	/**
 	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
 	 * @param authorizationHeader {@code Authorization} HTTP header value
@@ -82,7 +86,8 @@ public class VideoGamesResource {
 		@QueryParam("limit") String limitParam,
 		@QueryParam("start") String startParam,
 		@QueryParam("keywords") String keywordsParam,
-		@QueryParam("creator") String creatorParam
+		@QueryParam("creator") String creatorParam,
+		@QueryParam("city") String cityParam
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
 
@@ -96,6 +101,19 @@ public class VideoGamesResource {
 		// Handle "keywords" url parameter
 		if (keywordsParam != null && !keywordsParam.isEmpty()) {
 			videoGames.removeIf(videoGame -> FuzzySearch.weightedRatio(videoGame.getName(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
+		}
+
+		// Handle "city" url parameter
+		if (cityParam != null && !cityParam.isEmpty()) {
+			videoGames.removeIf(videoGame -> {
+				// Gather creator of video-game record
+				User creator = userDAO.findBy(videoGame.getUserId());
+				if (creator == null) {
+					return true;
+				}
+
+				return !creator.getCity().equalsIgnoreCase(cityParam);
+			});
 		}
 
 		// Handle "start" url parameter
