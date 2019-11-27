@@ -149,9 +149,9 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 	private List<VideoGame> selectBy(String sqlQuerySelector, String value) throws SQLException {
 		List<VideoGame> videogames = new ArrayList<>();
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+		Connection connection;
+		PreparedStatement preparedStatement ;
+		ResultSet resultSet;
 
 		try {
 
