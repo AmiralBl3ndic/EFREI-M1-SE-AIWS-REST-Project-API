@@ -295,7 +295,7 @@ public class VideoGamesResource {
 	 */
 	private Response handlePostVideoGameComment(
 		String videoGameId,
-		String userId,
+		String authorizationHeader,
 		String content
 	) {
 		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
@@ -376,13 +376,19 @@ public class VideoGamesResource {
 	 */
 	@POST
 	@Path("{id}/comments")
+	@JWTTokenNeeded
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGameComment(
-		/* TODO: create a simple class to hold the needed request parameters */
-		Object body
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("id") String videoGameId,
+		VideoGameResourceCommentRequest body
 	) {
-		return this.handlePostVideoGameComment();
+		return this.handlePostVideoGameComment(
+			videoGameId,
+			authorizationHeader,
+			body.getComment()
+		);
 	}
 
 	/**
@@ -391,12 +397,19 @@ public class VideoGamesResource {
 	 */
 	@POST
 	@Path("{id}/comments")
+	@JWTTokenNeeded
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGameComment(
-		/* TODO: define all the needed parameters */
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("id") String videoGameId,
+		@FormParam("comment") String comment
 	) {
-		return this.handlePostVideoGameComment();
+		return this.handlePostVideoGameComment(
+			videoGameId,
+			authorizationHeader,
+			comment
+		);
 	}
 	///endregion
 
