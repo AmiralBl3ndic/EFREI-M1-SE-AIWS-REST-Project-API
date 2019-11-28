@@ -100,7 +100,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 			if (state == 0) {
 				logger.log(Level.WARNING, "Error: unable to update video-game");
-				return;
 			}
 		} catch (SQLException e) {
 			logger.log(Level.WARNING, "Error while updating video-game record", e);
@@ -128,7 +127,6 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 			if (state == 0) {
 				logger.log(Level.WARNING, "Unable to delete video-game record");
-				return;
 			}
 		} catch (SQLException e) {
 			logger.log(Level.WARNING, "Error while deleting video-game record", e);
@@ -168,7 +166,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 				videogames.add(DAOUtils.mappingVideoGame(resultSet));
 			}
 		} catch(Exception e) {
-			logger.log(Level.WARNING, "Unhandled error", e);
+			throw new SQLException(e);
 		} finally {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
