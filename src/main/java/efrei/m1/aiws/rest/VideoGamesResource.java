@@ -5,7 +5,7 @@ import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
-import efrei.m1.aiws.service.JWTService;
+import efrei.m1.aiws.service.AuthenticationService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -73,23 +73,6 @@ public class VideoGamesResource {
 
 	@Setter
 	private static UserDAOImpl userDAO;
-
-	/**
-	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
-	 * @param authorizationHeader {@code Authorization} HTTP header value
-	 * @return User id associated with the passed in Authorization HTTP header (JWT token)
-	 */
-	private String getUserIdFromAuthorizationHeader(String authorizationHeader) {
-		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
-		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
-
-		// The following check should never be true
-		if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
-			return "";
-		}
-
-		return clientUserRecord.getDbId();
-	}
 
 	/**
 	 * Applies the requests URL parameters (that we call filters)
@@ -315,7 +298,7 @@ public class VideoGamesResource {
 		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
 		VideoGameResourceRequest body
 	) {
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
 		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
 		if (userId.isEmpty()) {
@@ -350,7 +333,7 @@ public class VideoGamesResource {
 		@FormParam("editor") String editor,
 		@FormParam("releaseDate") String releaseDate
 	) {
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
 		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
 		if (userId.isEmpty()) {
@@ -429,7 +412,7 @@ public class VideoGamesResource {
 		String releaseDate
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
-		final String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		final String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 		final VideoGame videoGame = videoGameDAO.findBy(videoGameId);
 
 		if (videoGame == null) {
@@ -518,7 +501,7 @@ public class VideoGamesResource {
 		@PathParam("id") String videoGameId
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 		VideoGame videoGame = videoGameDAO.findBy(videoGameId);
 
 		if (videoGame == null) {
