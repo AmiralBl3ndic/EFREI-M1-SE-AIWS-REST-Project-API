@@ -69,7 +69,7 @@ public class BookDAOImpl implements DAO<Book>
 			final String releaseDate = book.getReleaseDate();
 			final String editor = book.getEditor();
 
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,book);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,bookID, userID, author, title, type, description, releaseDate, editor, rating);
 			int state = preparedStatement.executeUpdate();
 
 			if(state == 0) {
@@ -136,7 +136,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_BOOK, id);
 
-			if(candidates.size() >= 1) {
+			if(!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch(SQLException e) {
@@ -198,7 +198,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -213,7 +213,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_AUTHOR, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -228,7 +228,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_TITLE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -243,7 +243,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -258,7 +258,7 @@ public class BookDAOImpl implements DAO<Book>
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
