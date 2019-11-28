@@ -46,6 +46,24 @@ class VideoGameResourceResponse {
 	}
 }
 
+/**
+ * Simple class to represent the incoming HTTP Request JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class VideoGameResourceCommentRequest {
+	private String comment;
+}
+
+/**
+ * Simple class to represent the outgoing HTTP Response JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class VideoGameResourceCommentResponse {
+	private String error = "";
+
+	private String comment;
+}
+
 
 @Path("/video-games")
 public class VideoGamesResource {
