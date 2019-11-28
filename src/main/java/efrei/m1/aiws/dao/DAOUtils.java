@@ -102,13 +102,11 @@ public class DAOUtils {
 		return dvd;
 	}
 
-	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
-		Comment comment= new Comment();
+	public static Comment<VideoGame> mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
+		Comment<VideoGame> comment = new Comment<>();
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
 		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
 		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
-		//@TODO
-		// Mapp au bon type d'objet.
 		return comment;
 	}
 
