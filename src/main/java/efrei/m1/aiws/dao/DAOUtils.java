@@ -1,9 +1,6 @@
 package efrei.m1.aiws.dao;
 
-import efrei.m1.aiws.model.Book;
-import efrei.m1.aiws.model.DVD;
-import efrei.m1.aiws.model.User;
-import efrei.m1.aiws.model.VideoGame;
+import efrei.m1.aiws.model.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -105,6 +102,7 @@ public class DAOUtils {
 		dvd.setDuration(resultSet.getString(DB_COL_DVD_DURATION));
 		return dvd;
 	}
+
 
 
 	///region silentClose
