@@ -1,5 +1,6 @@
 package efrei.m1.aiws.dao;
 
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.model.VideoGame;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE) VALUES (?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ? WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
+	private static final String SQL_SELECT_COMMENTS ="SELECT COMMENT_CONTENT FROM VIDEOGAMES v INNER JOIN VG_COMMENTS c on v.ID_VIDEO_GAME= c.ID_VG_COMMENTED WHERE ID_VIDEO_GAME=?";
 	///endregion
 
 	private static final Logger logger = Logger.getLogger(VideoGameDAOImpl.class.getName());
@@ -267,5 +269,36 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Function to list all the comments made on a given Video Game
+	 * @param
+	 * @param idVideoGame
+	 * @return
+	 */
+	public List<Comment> selectAllComments(String idVideoGame){
+		List <Comment> comments=new ArrayList<>();
+		Connection connection =null;
+		PreparedStatement preparedStatement=null ;
+		ResultSet resultSet=null;
+
+		try{
+			connection= this.daofactory.getConnection();
+			preparedStatement=DAOUtils.initPreparedStatement(connection,SQL_SELECT_COMMENTS,false,idVideoGame);
+			resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				comments.add(DAOUtils.mappingCommentVideoGames(resultSet));
+
+			}
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		}
+	finally {
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+
+		}
+
+		return comments;
 	}
 }

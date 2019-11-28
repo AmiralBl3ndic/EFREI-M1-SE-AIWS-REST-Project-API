@@ -14,10 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static efrei.m1.aiws.dao.UserDAOImpl.*;
-import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 import static efrei.m1.aiws.dao.BookDAOImpl.*;
+import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 import static efrei.m1.aiws.dao.DVDDAOImpl.*;
-
 
 /**
  * Static class to handle multiple DAO-related repetitive actions
@@ -103,7 +102,15 @@ public class DAOUtils {
 		return dvd;
 	}
 
-
+	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
+		Comment comment= new Comment();
+		comment.setId_User(resultSet.getString("ID_COMMENTER_VG"));
+		comment.setId_Element(resultSet.getString("ID_VG_COMMENTED"));
+		comment.setComment(resultSet.getString("COMMENT_CONTENT"));
+		//@TODO
+		// Mapp au bon type d'objet.
+		return comment;
+	}
 
 	///region silentClose
 

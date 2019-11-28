@@ -1,5 +1,6 @@
 package efrei.m1.aiws.model;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ public class Comment {
 
     private String comment;
 
-    private Object elementType;
+    //@TODO
+    // Object VideoGame, Book et DVD ?
+
 
 }
