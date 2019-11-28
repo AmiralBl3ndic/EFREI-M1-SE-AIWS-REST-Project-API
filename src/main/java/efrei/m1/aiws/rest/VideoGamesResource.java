@@ -63,7 +63,7 @@ class VideoGameResourceCommentRequest {
 class VideoGameResourceCommentResponse {
 	private String error = "";
 
-	private String comment;
+	private Comment<VideoGame> comment;
 }
 
 
@@ -283,6 +283,7 @@ public class VideoGamesResource {
 		String authorizationHeader,
 		String content
 	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
 		final String creatorId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
 		Comment<VideoGame> comment = new Comment<>();
@@ -290,7 +291,16 @@ public class VideoGamesResource {
 		comment.setCreatorId(creatorId);
 		comment.setResourceId(videoGameId);
 
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		videoGameDAO.createComment(comment);
+
+		// Check if database record creation succeeded
+		if (comment.getDbId() != null) {
+			res.setComment(comment);
+			return Response.status(Response.Status.CREATED).entity(res).build();
+		}
+
+		res.setError(VIDEOGAMES_ERROR_CANNOT_CREATE_COMMENT);
+		return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
 	}
 
 
