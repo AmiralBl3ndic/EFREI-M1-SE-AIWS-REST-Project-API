@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -83,7 +82,7 @@ public class JWTService {
 	 * @param token String to be considered as a {@link JWT} token
 	 * @return {@link User} object associated to the token (if legit token), {@code null} otherwise
 	 */
-	public static User getUserFromToken(String token) throws SQLException {
+	public static User getUserFromToken(String token) {
 		User user = null;
 
 		if (!JWTService.isTokenLegit(token)) {
