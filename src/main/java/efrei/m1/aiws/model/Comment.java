@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class Comment<T> {
 
+    private String dbId;
+
     private String content;
 
     private String creatorId;
