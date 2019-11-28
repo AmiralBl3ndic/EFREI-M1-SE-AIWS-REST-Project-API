@@ -12,6 +12,4 @@ public class Comment<T> {
     private String creatorId;
 
     private String resourceId;
-
-    private T resourceType;
 }
