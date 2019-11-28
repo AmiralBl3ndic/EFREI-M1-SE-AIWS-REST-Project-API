@@ -4,8 +4,10 @@ import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.AuthenticationService;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -281,6 +283,13 @@ public class VideoGamesResource {
 		String authorizationHeader,
 		String content
 	) {
+		final String creatorId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+
+		Comment<VideoGame> comment = new Comment<>();
+		comment.setContent(content);
+		comment.setCreatorId(creatorId);
+		comment.setResourceId(videoGameId);
+
 		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
