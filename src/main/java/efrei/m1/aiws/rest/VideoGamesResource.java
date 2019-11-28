@@ -25,7 +25,6 @@ import static efrei.m1.aiws.utils.Constants.*;
  */
 @Data @NoArgsConstructor
 class VideoGameResourceRequest {
-	private String userId;
 	private String name;
 	private String type;
 	private String resume;
