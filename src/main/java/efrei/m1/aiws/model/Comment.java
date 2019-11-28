@@ -8,12 +8,12 @@ import lombok.ToString;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class Comment {
 
-    private String Id_Element;
+    private String id_Element;
 
-    private String Id_User;
+    private String id_User;
 
-    private String Comment;
+    private String comment;
 
-    private Object ElementType;
+    private Object elementType;
 
 }
