@@ -276,12 +276,11 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 	/**
 	 * Function to list all the comments made on a given Video Game
-	 * @param
-	 * @param idVideoGame
-	 * @return
+	 * @param idVideoGame ID of the video-game database record to look the comments for
+	 * @return List of all {@link Comment}s related to video-game record with id {@code idVideoGame}
 	 */
-	public List<Comment> selectAllComments(String idVideoGame) {
-		List <Comment> comments = new ArrayList<>();
+	public List<Comment<VideoGame>> selectAllComments(String idVideoGame) {
+		List <Comment<VideoGame>> comments = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null ;
 		ResultSet resultSet = null;
