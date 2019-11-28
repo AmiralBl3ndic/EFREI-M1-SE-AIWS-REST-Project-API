@@ -293,7 +293,11 @@ public class VideoGamesResource {
 	 * Handle the {@code POST} requests made to the /video-games/{id}/comments endpoint
 	 * @return HTTP Response to send to the user
 	 */
-	private Response handlePostVideoGameComment(/* TODO: define and insert parameters */) {
+	private Response handlePostVideoGameComment(
+		String videoGameId,
+		String userId,
+		String content
+	) {
 		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
