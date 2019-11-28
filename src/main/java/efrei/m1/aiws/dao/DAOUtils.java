@@ -83,7 +83,7 @@ public class DAOUtils {
 		book.setDescription(resultSet.getString(DB_COL_BOOK_DESCRIPTION));
 		book.setReleaseDate(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
 		book.setEditor(resultSet.getString(DB_COL_BOOK_EDITOR));
-		book.setAgeLimit(resultSet.getString(DB_COL_BOOK_AGELIMIT));
+		book.setAgeLimit(Integer.parseInt(resultSet.getString(DB_COL_BOOK_AGELIMIT)));
 		return book;
 	}
 
@@ -104,9 +104,9 @@ public class DAOUtils {
 
 	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment= new Comment();
-		comment.setId_User(resultSet.getString("ID_COMMENTER_VG"));
-		comment.setId_Element(resultSet.getString("ID_VG_COMMENTED"));
-		comment.setComment(resultSet.getString("COMMENT_CONTENT"));
+		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
+		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
+		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
 		//@TODO
 		// Mapp au bon type d'objet.
 		return comment;
