@@ -278,15 +278,15 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	 * @return List of all {@link Comment}s related to video-game record with id {@code idVideoGame}
 	 */
 	public List<Comment<VideoGame>> selectAllComments(String idVideoGame) {
-		List <Comment<VideoGame>> comments = new ArrayList<>();
+		List<Comment<VideoGame>> comments = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null ;
 		ResultSet resultSet = null;
 
 		try {
-			connection= this.daofactory.getConnection();
-			preparedStatement=DAOUtils.initPreparedStatement(connection,SQL_SELECT_COMMENTS,false,idVideoGame);
-			resultSet=preparedStatement.executeQuery();
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection,SQL_SELECT_COMMENTS,false,idVideoGame);
+			resultSet = preparedStatement.executeQuery();
 
 			while(resultSet.next()) {
 				comments.add(DAOUtils.mappingCommentVideoGames(resultSet));
