@@ -28,17 +28,14 @@ Endpoint: /books
 		        -"Authorization": {JWT Token obtained when authenticated through /auth endpoint}
 		    -body
 		        -required
-		            -ID=[integer]: the number's ID of the book
 		            -title=[string]: the title of the book
 		            -authorName=[string]: the name of the author
 		            -authorSurname=[string]: the lastname of the author
-		        -optional
-		            -collection[string]:the collection of the book
 		            -releaseDate[string]: the release date of the book
-		            -numberOfPage=[integer]: number of the page
 		            -synopsis[string]: little description about the story of the book
+		            -editor[string]: the editor of this book
+
 		            -rate=[integer]: the rate of the book on 5
-		             -editor[string]: the editor of this book
 
 Endpoint: /video-games
 	Produces: [JSON] List of video-game resources
