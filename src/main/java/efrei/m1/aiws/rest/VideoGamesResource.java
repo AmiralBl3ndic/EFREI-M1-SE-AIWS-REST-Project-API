@@ -495,12 +495,13 @@ public class VideoGamesResource {
 		// Check if user has the right to delete the resource
 		if (!userId.equals(videoGame.getUserId())) {
 			res.setError(VIDEOGAMES_ERROR_FORBIDDEN);
-			return Response.status(Response.Status.FORBIDDEN).build();
+			return Response.status(Response.Status.FORBIDDEN).entity(res).build();
 		}
 
 		// Actually delete the resource
 		videoGameDAO.delete(videoGame);
-		return Response.status(Response.Status.NO_CONTENT).build();
+		res.addItem(videoGame);
+		return Response.status(Response.Status.NO_CONTENT).entity(res).build();
 	}
 	///endregion
 }
