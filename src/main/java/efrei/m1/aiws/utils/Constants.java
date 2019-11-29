@@ -32,6 +32,7 @@ public class Constants {
 	public static final String VIDEOGAMES_ILLEGAL_FILTER_VALUE = "Please specify a valid value for URL parameters";
 	public static final String VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT = "Please specify a valid integer for URL parameter";
 	public static final String VIDEOGAMES_ERROR_CANNOT_CREATE_COMMENT = "Unable to create the comment";
+	public static final String VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS = "Unable to find comments";
 	///endregion
 	///endregion
 }

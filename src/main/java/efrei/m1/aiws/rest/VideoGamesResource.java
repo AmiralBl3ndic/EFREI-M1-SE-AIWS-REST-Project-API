@@ -229,14 +229,22 @@ public class VideoGamesResource {
 	@Path("{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGameComments(@PathParam("id") String videoGameId) {
-		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
 		VideoGame item = videoGameDAO.findBy(videoGameId);
 
-		if (item != null) {
+		if (item == null) {
 			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
 			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
 		} else {
-			return Response.status(Response.Status.NOT_IMPLEMENTED).entity(res).build();
+			List<Comment<VideoGame>> comments = videoGameDAO.selectAllComments(videoGameId);
+
+			if (comments == null) {
+				res.setError(VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+			res.setItems(comments);
+			return Response.ok().entity(res).build();
 		}
 	}
 	///endregion
