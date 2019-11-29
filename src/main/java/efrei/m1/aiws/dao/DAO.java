@@ -2,8 +2,6 @@ package efrei.m1.aiws.dao;
 
 import lombok.NonNull;
 
-import java.sql.SQLException;
-
 public interface DAO<T> {
 	/**
 	 * Creates an instance of passed object in the database
