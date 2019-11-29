@@ -72,7 +72,11 @@ public class BookDAOImpl implements DAO<Book>
 			final String editor = book.getEditor();
 			final int rating = book.getRating();
 
+
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,bookID, userID, author, title, type, description, releaseDate, editor, rating);
+
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,bookID,userID,author,title,type,description,releaseDate,editor,rating);
+
 			int state = preparedStatement.executeUpdate();
 
 			if(state == 0) {
