@@ -30,7 +30,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	static final String DB_COL_DVD_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_DVD_AGELIMIT = "AGELIMIT";
 	static final String DB_COL_DVD_DURATION = "DURATION";
-	static final String DB_COL_DVD_RATING = "RATIONG";
+	static final String DB_COL_DVD_RATING = "RATING";
 	///endregion
 
 	///region SQL QUERIES
@@ -184,19 +184,19 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return dvd;
 	}
 
-	public DVD findAll() {
+	public List<DVD> findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		DVD dvd = null;
+		List<DVD> dvd = new ArrayList<>();
 
 		try {
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 
-			if(resultSet.next()) {
-				dvd = DAOUtils.mappingDVD(resultSet);
+			while(resultSet.next()) {
+				dvd.add(DAOUtils.mappingDVD(resultSet));
 			}
 
 		} catch (SQLException e) {
