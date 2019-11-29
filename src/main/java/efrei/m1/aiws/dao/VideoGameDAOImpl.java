@@ -136,7 +136,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_VG, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -150,7 +150,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		List<VideoGame> videogames = new ArrayList<>();
 		Connection connection;
 		PreparedStatement preparedStatement ;
-		ResultSet resultSet;
+		ResultSet resultSet = null;
 
 		try {
 
@@ -166,6 +166,8 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 		} catch(Exception e) {
 			throw new DAOException(e);
+		} finally {
+			resultSet.close();
 		}
 
 		return videogames;
@@ -215,7 +217,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -230,7 +232,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -245,7 +247,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -260,7 +262,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
