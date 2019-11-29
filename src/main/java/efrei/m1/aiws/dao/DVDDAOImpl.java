@@ -50,7 +50,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
 	///endregion
 
-	private static final Logger logger = Logger.getLogger(VideoGameDAOImpl.class.getName());
+	private static final Logger logger = Logger.getLogger(DVDDAOImpl.class.getName());
 	///endregion
 	private DAOFactory daofactory;
 
@@ -150,7 +150,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_DVD, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -164,7 +164,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		List<DVD> dvd = new ArrayList<>();
 		Connection connection;
 		PreparedStatement preparedStatement;
-		ResultSet resultSet;
+		ResultSet resultSet = null;
 
 		try {
 
@@ -180,6 +180,8 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 		} catch(Exception e) {
 			throw new DAOException(e);
+		} finally {
+			resultSet.close();
 		}
 		return dvd;
 	}
@@ -213,7 +215,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -228,7 +230,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -243,7 +245,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -258,7 +260,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -273,7 +275,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_AUDIO, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -288,7 +290,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -303,7 +305,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_AGELIMIT, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -318,7 +320,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_DURATION, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
@@ -333,7 +335,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		try {
 			candidates = this.selectBy(SQL_SELECT_RATING, id);
 
-			if (candidates.size() >= 1) {
+			if (!candidates.isEmpty()) {
 				return candidates.get(0);
 			}
 		} catch (SQLException e) {
