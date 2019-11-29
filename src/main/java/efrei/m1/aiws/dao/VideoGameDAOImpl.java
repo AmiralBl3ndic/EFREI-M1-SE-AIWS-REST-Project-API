@@ -292,7 +292,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 				comments.add(DAOUtils.mappingCommentVideoGames(resultSet));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.WARNING, "Unable to get comments of video-game", e);
+            logger.log(Level.WARNING, "Unable to get comments of video-game", e);
 		}
 		finally {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
