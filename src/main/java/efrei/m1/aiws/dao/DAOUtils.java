@@ -110,6 +110,23 @@ public class DAOUtils {
 		return comment;
 	}
 
+	public static Comment<Book> mappingCommentBook(@NonNull ResultSet resultSet) throws SQLException {
+		Comment<Book> comment = new Comment<>();
+		comment.setCreatorId(resultSet.getString("ID_COMMENTER"));
+		comment.setResourceId(resultSet.getString("ID_BOOK_COMMENTED"));
+		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
+		return comment;
+
+	}
+
+	public static Comment<DVD> mappingCommentDVD(@NonNull ResultSet resultSet) throws SQLException {
+		Comment<DVD> comment = new Comment<>();
+		comment.setCreatorId(resultSet.getString("ID_COMMENTER_DVD"));
+		comment.setResourceId(resultSet.getString("ID_DVD_COMMENTED"));
+		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
+		return comment;
+
+	}
 	///region silentClose
 
 	public static void silentClose(Statement statement) {
