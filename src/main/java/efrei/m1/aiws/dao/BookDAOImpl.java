@@ -2,15 +2,18 @@ package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.Book;
 
+import efrei.m1.aiws.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +48,7 @@ public class BookDAOImpl implements DAO<Book>
 	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_BOOK,ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR,AGELIMIT) VALUES (?,?,?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ? WHERE ID_BOOK = ?";
 	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
+	private static final String SQL_SELECT_COMMENTS ="SELECT COMMENT_CONTENT FROM BOOKS b INNER JOIN BOOK_COMMENTS c on b.ID_BOOK= c.ID_BOOK_COMMENTED WHERE ID_BOOK=?";
 	///endregion
 
 	private static final Logger logger = Logger.getLogger(BookDAOImpl.class.getName());
@@ -270,5 +274,30 @@ public class BookDAOImpl implements DAO<Book>
 		return null;
 	}
 
+	public List<Comment<Book>> comments (String idBook){
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		List<Comment<Book>> comments= new ArrayList<>();
 
-}
+		try {
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection,SQL_SELECT_COMMENTS,false,idBook);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()){
+				comments.add(DAOUtils.mappingCommentBook(resultSet));
+			}
+
+		} catch (SQLException e) {
+			logger.log(Level.WARNING, "Unable to get comments of book", e);
+		}
+
+		finally {
+			DAOUtils.silentClose(resultSet,preparedStatement,connection);
+		}
+
+		return comments;
+	}
+	}
+
