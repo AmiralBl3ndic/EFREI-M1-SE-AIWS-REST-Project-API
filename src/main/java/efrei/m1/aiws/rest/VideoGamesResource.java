@@ -63,7 +63,11 @@ class VideoGameResourceCommentRequest {
 class VideoGameResourceCommentResponse {
 	private String error = "";
 
-	private Comment<VideoGame> comment;
+	private List<Comment<VideoGame>> items = new ArrayList<>();
+
+	void addItem(Comment<VideoGame> item) {
+		this.items.add(item);
+	}
 }
 
 
@@ -295,7 +299,7 @@ public class VideoGamesResource {
 
 		// Check if database record creation succeeded
 		if (comment.getDbId() != null) {
-			res.setComment(comment);
+			res.addItem(comment);
 			return Response.status(Response.Status.CREATED).entity(res).build();
 		}
 
