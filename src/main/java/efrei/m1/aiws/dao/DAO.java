@@ -2,7 +2,6 @@ package efrei.m1.aiws.dao;
 
 import lombok.NonNull;
 
-
 public interface DAO<T> {
 	/**
 	 * Creates an instance of passed object in the database
