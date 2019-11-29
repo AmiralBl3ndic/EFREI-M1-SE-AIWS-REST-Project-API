@@ -1,5 +1,6 @@
 package efrei.m1.aiws.dao;
 
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.model.DVD;
 
 import lombok.AllArgsConstructor;
@@ -46,6 +47,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	private static final String SQL_INSERT_DVD = "INSERT INTO DVDS(ID_DVD,ID_USER,TITLE,TYPE,DESCRIPTION,EDITOR,AUDIO,RELEASEDATE,AGELIMIT,DURATION) VALUES (?,?,?,?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ? WHERE ID_DVD = ? ";
 	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
+	private static final String SQL_SELECT_COMMENT = "SELECT COMMENT_CONTENT FROM DVDs d INNER JOIN DVD_COMMENTS c on d.ID_DVD= c.ID_DVD_COMMENTED WHERE ID_DVD=?";
 	///endregion
 
 	private static final Logger logger = Logger.getLogger(VideoGameDAOImpl.class.getName());
@@ -325,5 +327,33 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 		return null;
 	}
+
+	public List<Comment<DVD>> comments (String idDVD){
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    List<Comment<DVD>> comments = new ArrayList<>();
+
+	    try{
+	        connection = this.daofactory.getConnection();
+	        preparedStatement = DAOUtils.initPreparedStatement(connection,SQL_SELECT_COMMENT,false,idDVD);
+	        resultSet = preparedStatement.executeQuery();
+
+	        while (resultSet.next()){
+	            comments.add(DAOUtils.mappingCommentDVD(resultSet));
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.WARNING, "Unable to get comments of DVD", e);
+
+        }
+
+	    finally{
+	        DAOUtils.silentClose(resultSet,preparedStatement,connection);
+        }
+
+	    return comments;
+
+    }
 
 }
