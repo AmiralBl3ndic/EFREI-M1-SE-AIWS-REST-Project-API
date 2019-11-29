@@ -32,5 +32,15 @@ public class Constants {
 	public static final String VIDEOGAMES_ILLEGAL_FILTER_VALUE = "Please specify a valid value for URL parameters";
 	public static final String VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT = "Please specify a valid integer for URL parameter";
 	///endregion
+
+	///region Books
+	public static final String BOOKS_ERROR_NOT_FOUND = "Book not found";
+	public static final String BOOKS_ERROR_NOT_CREATED = "Unable to create book";
+	public static final String BOOKS_ERROR_NO_CLIENT_ACCOUNT = "Unable to find a valid account to create this resource";
+	public static final String BOOKS_ERROR_FORBIDDEN = "You cannot update or delete a record you haven't created";
+	public static final String BOOKS_ILLEGAL_FILTER_VALUE = "Please specify a valid value for URL parameters";
+	public static final String BOOKS_ILLEGAL_FILTER_TYPE_INT = "Please specify a valid integer for URL parameter";
+	///endregion
+
 	///endregion
 }
