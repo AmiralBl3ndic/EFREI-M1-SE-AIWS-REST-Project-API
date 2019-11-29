@@ -50,6 +50,7 @@ public class DAOInitializer implements ServletContextListener {
 
 		// Context Dependency Injection for VideoGamesResource
 		VideoGamesResource.setVideoGameDAO((VideoGameDAOImpl) daoFactory.getVideoGameDao());
+		VideoGamesResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
 	}
 
 	@Override
