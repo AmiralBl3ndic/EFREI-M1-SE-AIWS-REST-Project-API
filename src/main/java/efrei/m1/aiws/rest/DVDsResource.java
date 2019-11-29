@@ -198,15 +198,15 @@ public class DVDsResource {
 
     /**
      * Get the details of the dvd with database id {@code id}
-     * @param DVDId Database id of the dvd to get the details of
+     * @param DvdId Database id of the dvd to get the details of
      * @return Details of a specific dvd if it has a record in the database, {@code 404 NOT_FOUND} otherwise
      */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDVDDetails(@PathParam("id") String DVDId) {
+    public Response getDVDDetails(@PathParam("id") String DvdId) {
         DVDResourceResponse res = new DVDResourceResponse();
-        DVD item = dvdDAO.findBy(DVDId);
+        DVD item = dvdDAO.findBy(DvdId);
 
         if (item != null) {
             res.addItem(item);
@@ -219,15 +219,15 @@ public class DVDsResource {
 
     /**
      * Get the comments of the dvd with database id {@code id}
-     * @param DVDId Database id of the dvd to get the comments of
+     * @param DvdId Database id of the dvd to get the comments of
      * @return List tof comments of a specific dvd record if it has a record in the database, {@code 404 NOT_FOUND} otherwise
      */
     @GET
     @Path("{id}/comments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDVDComments(@PathParam("id") String DVDId) {
+    public Response getDVDComments(@PathParam("id") String DvdId) {
         DVDResourceResponse res = new DVDResourceResponse();
-        DVD item = dvdDAO.findBy(DVDId);
+        DVD item = dvdDAO.findBy(DvdId);
 
         if (item != null) {
             res.setError(DVDS_ERROR_NOT_FOUND);
