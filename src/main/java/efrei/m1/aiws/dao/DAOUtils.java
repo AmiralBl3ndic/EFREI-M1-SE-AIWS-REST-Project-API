@@ -105,6 +105,7 @@ public class DAOUtils {
 
 	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
+		comment.setDbId(resultSet.getString("COMMENT_ID"));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
 		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
 		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
