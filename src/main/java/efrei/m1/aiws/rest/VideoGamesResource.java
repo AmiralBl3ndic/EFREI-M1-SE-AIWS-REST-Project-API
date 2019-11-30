@@ -551,5 +551,33 @@ public class VideoGamesResource {
 		res.addItem(videoGame);
 		return Response.status(Response.Status.NO_CONTENT).entity(res).build();
 	}
+
+	@DELETE
+	@Path("{videoGameId}/comments/{commentId}")
+	@JWTTokenNeeded
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteVideoGameComment(
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("videoGameId") String videoGameId,
+		@PathParam("commentId") String commentId
+	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+		Comment<VideoGame> comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+
+		if (comment == null) {
+			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		if (!userId.equals(comment.getCreatorId())) {
+			res.setError(VIDEOGAMES_ERROR_FORBIDDEN);
+			return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+		}
+
+		// TODO: use videoGameDAO to delete comment
+
+		return Response.status(Response.Status.NO_CONTENT).build();
+	}
 	///endregion
 }
