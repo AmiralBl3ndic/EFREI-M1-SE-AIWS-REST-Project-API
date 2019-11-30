@@ -38,11 +38,12 @@ public class DAOUtils {
 	 * @throws SQLException In case of a SQL-related problem
 	 */
 	public static PreparedStatement initPreparedStatement(@NonNull Connection connection, @NonNull final String sql, final boolean returnGeneratedKeys, Object... object) throws SQLException {
-		PreparedStatement preparedStatement = connection.prepareStatement(sql,returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS);
+		PreparedStatement preparedStatement = connection.prepareStatement(sql, returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS);
 
-		for(int i=0; i<object.length; i++){
+		for(int i = 0; i < object.length; i++){
 			preparedStatement.setObject(i+1, object[i]);
 		}
+
 		return preparedStatement;
 	}
 
@@ -102,8 +103,8 @@ public class DAOUtils {
 		return dvd;
 	}
 
-	public static Comment<VideoGame> mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
-		Comment<VideoGame> comment = new Comment<>();
+	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
+		Comment comment = new Comment();
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
 		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
 		comment.setContent(resultSet.getString("COMMENT_CONTENT"));

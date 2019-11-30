@@ -63,9 +63,9 @@ class VideoGameResourceCommentRequest {
 class VideoGameResourceCommentResponse {
 	private String error = "";
 
-	private List<Comment<VideoGame>> items = new ArrayList<>();
+	private List<Comment> items = new ArrayList<>();
 
-	void addItem(Comment<VideoGame> item) {
+	void addItem(Comment item) {
 		this.items.add(item);
 	}
 }
@@ -236,7 +236,7 @@ public class VideoGamesResource {
 			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
 			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
 		} else {
-			List<Comment<VideoGame>> comments = videoGameDAO.selectAllComments(videoGameId);
+			List<Comment> comments = videoGameDAO.selectAllComments(videoGameId);
 
 			if (comments == null) {
 				res.setError(VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS);
@@ -256,7 +256,7 @@ public class VideoGamesResource {
 		@PathParam("commentId") String commentId
 	) {
 		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
-		Comment<VideoGame> comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+		Comment comment = videoGameDAO.selectCommentById(videoGameId, commentId);
 
 		if (comment == null) {
 			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
@@ -317,7 +317,7 @@ public class VideoGamesResource {
 		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
 		final String creatorId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
-		Comment<VideoGame> comment = new Comment<>();
+		Comment comment = new Comment();
 		comment.setContent(content);
 		comment.setCreatorId(creatorId);
 		comment.setResourceId(videoGameId);
@@ -582,7 +582,7 @@ public class VideoGamesResource {
 	) {
 		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
 		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
-		Comment<VideoGame> comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+		Comment comment = videoGameDAO.selectCommentById(videoGameId, commentId);
 
 		if (comment == null) {
 			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
