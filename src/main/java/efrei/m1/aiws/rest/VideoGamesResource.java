@@ -247,6 +247,25 @@ public class VideoGamesResource {
 			return Response.ok().entity(res).build();
 		}
 	}
+
+	@GET
+	@Path("{videoGameId}/comments/{commentId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getVideoGameComment(
+		@PathParam("videoGameId") String videoGameId,
+		@PathParam("commentId") String commentId
+	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
+		Comment<VideoGame> comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+
+		if (comment == null) {
+			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		res.addItem(comment);
+		return Response.ok().entity(res).build();
+	}
 	///endregion
 
 
