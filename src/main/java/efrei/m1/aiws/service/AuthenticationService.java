@@ -47,11 +47,8 @@ public class AuthenticationService {
 	public static User authenticateUser(final String email, final String password) {
 		User user = userDAO.findByEmail(email);
 
-		if (user != null) {  // Check if a user record with passed in email was found
-			// Check if passwords match
-			if (AuthenticationService.compareToBCryptHash(password, user.getPassword())) {
-				return user;
-			}
+		if (user != null && AuthenticationService.compareToBCryptHash(password, user.getPassword())) {  // Check if a user record with passed in email was found and password matches
+			return user;
 		}
 
 		// If no user found
