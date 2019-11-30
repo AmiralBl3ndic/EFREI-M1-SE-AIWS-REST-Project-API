@@ -3,8 +3,6 @@ package efrei.m1.aiws.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.management.ObjectName;
-
 @Data @NoArgsConstructor
 public class Rating {
 
@@ -25,11 +23,10 @@ public class Rating {
         }
     }
 
-    public Rating(String iduser, String idobj, int rating, Object obj) {
-        this.idUser=iduser;
-        this.idObject=idobj;
-        this.elementRated=obj;
+    public Rating(String idUser, String idObj, int rating, Object obj) {
+        this.idUser = idUser;
+        this.idObject = idObj;
+        this.elementRated = obj;
         this.rating = rating >= MINIMUM_RATING && rating <= MAXIMUM_RATING ? rating : DEFAULT_RATING;
     }
-
 }
