@@ -4,8 +4,10 @@ import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.VideoGameDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.VideoGame;
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
-import efrei.m1.aiws.service.JWTService;
+import efrei.m1.aiws.service.AuthenticationService;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +27,6 @@ import static efrei.m1.aiws.utils.Constants.*;
  */
 @Data @NoArgsConstructor
 class VideoGameResourceRequest {
-	private String userId;
 	private String name;
 	private String type;
 	private String resume;
@@ -47,6 +48,28 @@ class VideoGameResourceResponse {
 	}
 }
 
+/**
+ * Simple class to represent the incoming HTTP Request JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class VideoGameResourceCommentRequest {
+	private String comment;
+}
+
+/**
+ * Simple class to represent the outgoing HTTP Response JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class VideoGameResourceCommentResponse {
+	private String error = "";
+
+	private List<Comment> items = new ArrayList<>();
+
+	void addItem(Comment item) {
+		this.items.add(item);
+	}
+}
+
 
 @Path("/video-games")
 public class VideoGamesResource {
@@ -56,23 +79,6 @@ public class VideoGamesResource {
 
 	@Setter
 	private static UserDAOImpl userDAO;
-
-	/**
-	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
-	 * @param authorizationHeader {@code Authorization} HTTP header value
-	 * @return User id associated with the passed in Authorization HTTP header (JWT token)
-	 */
-	private String getUserIdFromAuthorizationHeader(String authorizationHeader) {
-		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
-		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
-
-		// The following check should never be true
-		if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
-			return "";
-		}
-
-		return clientUserRecord.getDbId();
-	}
 
 	/**
 	 * Applies the requests URL parameters (that we call filters)
@@ -123,7 +129,7 @@ public class VideoGamesResource {
 
 		// Handle "limit" url parameter
 		if (limitParam != null && !limitParam.isEmpty()) {
-			int maxRecords = Integer.parseInt(limitParam);
+			int maxRecords = Math.min(Integer.parseInt(limitParam), videoGames.size());
 			videoGames = new ArrayList<>(videoGames.subList(0, maxRecords));
 		}
 
@@ -223,15 +229,42 @@ public class VideoGamesResource {
 	@Path("{id}/comments")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getVideoGameComments(@PathParam("id") String videoGameId) {
-		VideoGameResourceResponse res = new VideoGameResourceResponse();
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
 		VideoGame item = videoGameDAO.findBy(videoGameId);
 
-		if (item != null) {
+		if (item == null) {
 			res.setError(VIDEOGAMES_ERROR_NOT_FOUND);
 			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
 		} else {
-			return Response.status(Response.Status.NOT_IMPLEMENTED).entity(res).build();
+			List<Comment> comments = videoGameDAO.selectAllComments(videoGameId);
+
+			if (comments == null) {
+				res.setError(VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS);
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+			}
+
+			res.setItems(comments);
+			return Response.ok().entity(res).build();
 		}
+	}
+
+	@GET
+	@Path("{videoGameId}/comments/{commentId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getVideoGameComment(
+		@PathParam("videoGameId") String videoGameId,
+		@PathParam("commentId") String commentId
+	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
+		Comment comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+
+		if (comment == null) {
+			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		res.addItem(comment);
+		return Response.ok().entity(res).build();
 	}
 	///endregion
 
@@ -276,8 +309,29 @@ public class VideoGamesResource {
 	 * Handle the {@code POST} requests made to the /video-games/{id}/comments endpoint
 	 * @return HTTP Response to send to the user
 	 */
-	private Response handlePostVideoGameComment(/* TODO: define and insert parameters */) {
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+	private Response handlePostVideoGameComment(
+		String videoGameId,
+		String authorizationHeader,
+		String content
+	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
+		final String creatorId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+
+		Comment comment = new Comment();
+		comment.setContent(content);
+		comment.setCreatorId(creatorId);
+		comment.setResourceId(videoGameId);
+
+		videoGameDAO.createComment(comment);
+
+		// Check if database record creation succeeded
+		if (comment.getDbId() != null) {
+			res.addItem(comment);
+			return Response.status(Response.Status.CREATED).entity(res).build();
+		}
+
+		res.setError(VIDEOGAMES_ERROR_CANNOT_CREATE_COMMENT);
+		return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
 	}
 
 
@@ -294,7 +348,7 @@ public class VideoGamesResource {
 		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
 		VideoGameResourceRequest body
 	) {
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
 		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
 		if (userId.isEmpty()) {
@@ -329,7 +383,7 @@ public class VideoGamesResource {
 		@FormParam("editor") String editor,
 		@FormParam("releaseDate") String releaseDate
 	) {
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
 		// This should only be triggered when the passed in JWT is referencing a user that has been deleted
 		if (userId.isEmpty()) {
@@ -355,13 +409,19 @@ public class VideoGamesResource {
 	 */
 	@POST
 	@Path("{id}/comments")
+	@JWTTokenNeeded
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGameComment(
-		/* TODO: create a simple class to hold the needed request parameters */
-		Object body
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("id") String videoGameId,
+		VideoGameResourceCommentRequest body
 	) {
-		return this.handlePostVideoGameComment();
+		return this.handlePostVideoGameComment(
+			videoGameId,
+			authorizationHeader,
+			body.getComment()
+		);
 	}
 
 	/**
@@ -370,12 +430,19 @@ public class VideoGamesResource {
 	 */
 	@POST
 	@Path("{id}/comments")
+	@JWTTokenNeeded
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postVideoGameComment(
-		/* TODO: define all the needed parameters */
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("id") String videoGameId,
+		@FormParam("comment") String comment
 	) {
-		return this.handlePostVideoGameComment();
+		return this.handlePostVideoGameComment(
+			videoGameId,
+			authorizationHeader,
+			comment
+		);
 	}
 	///endregion
 
@@ -395,7 +462,7 @@ public class VideoGamesResource {
 		String releaseDate
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
-		final String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		final String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 		final VideoGame videoGame = videoGameDAO.findBy(videoGameId);
 
 		if (videoGame == null) {
@@ -484,7 +551,7 @@ public class VideoGamesResource {
 		@PathParam("id") String videoGameId
 	) {
 		VideoGameResourceResponse res = new VideoGameResourceResponse();
-		String userId = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 		VideoGame videoGame = videoGameDAO.findBy(videoGameId);
 
 		if (videoGame == null) {
@@ -502,6 +569,38 @@ public class VideoGamesResource {
 		videoGameDAO.delete(videoGame);
 		res.addItem(videoGame);
 		return Response.status(Response.Status.NO_CONTENT).entity(res).build();
+	}
+
+	@DELETE
+	@Path("{videoGameId}/comments/{commentId}")
+	@JWTTokenNeeded
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteVideoGameComment(
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+		@PathParam("videoGameId") String videoGameId,
+		@PathParam("commentId") String commentId
+	) {
+		VideoGameResourceCommentResponse res = new VideoGameResourceCommentResponse();
+		String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+		Comment comment = videoGameDAO.selectCommentById(videoGameId, commentId);
+
+		if (comment == null) {
+			res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_FOUND);
+			return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+		}
+
+		if (!userId.equals(comment.getCreatorId())) {
+			res.setError(VIDEOGAMES_ERROR_FORBIDDEN);
+			return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+		}
+
+		if (videoGameDAO.deleteComment(comment)) {  // Check if deletion "worked"
+			res.addItem(comment);
+			return Response.status(Response.Status.NO_CONTENT).entity(res).build();
+		}
+
+		res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_DELETED);
+		return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
 	}
 	///endregion
 }

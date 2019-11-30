@@ -1,20 +1,16 @@
-package efrei.m1.aiws.rest.filter;
+package efrei.m1.aiws.rest;
 
 
 import efrei.m1.aiws.dao.BookDAOImpl;
 import efrei.m1.aiws.model.Book;
 import efrei.m1.aiws.model.User;
-import efrei.m1.aiws.utils.*;
-import efrei.m1.aiws.model.VideoGame;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
-import sun.rmi.transport.ObjectTable;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;

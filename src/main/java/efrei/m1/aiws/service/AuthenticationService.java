@@ -47,14 +47,28 @@ public class AuthenticationService {
 	public static User authenticateUser(final String email, final String password) {
 		User user = userDAO.findByEmail(email);
 
-		if (user != null) {  // Check if a user record with passed in email was found
-			// Check if passwords match
-			if (AuthenticationService.compareToBCryptHash(password, user.getPassword())) {
-				return user;
-			}
+		if (user != null && AuthenticationService.compareToBCryptHash(password, user.getPassword())) {  // Check if a user record with passed in email was found and password matches
+			return user;
 		}
 
 		// If no user found
 		return null;
+	}
+
+	/**
+	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
+	 * @param authorizationHeader {@code Authorization} HTTP header value
+	 * @return User id associated with the passed in Authorization HTTP header (JWT token)
+	 */
+	public static String getUserIdFromAuthorizationHeader(String authorizationHeader) {
+		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
+		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
+
+		// The following check should never be true
+		if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
+			return "";
+		}
+
+		return clientUserRecord.getDbId();
 	}
 }
