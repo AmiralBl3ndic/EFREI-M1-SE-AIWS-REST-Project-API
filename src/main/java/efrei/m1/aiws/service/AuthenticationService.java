@@ -57,4 +57,21 @@ public class AuthenticationService {
 		// If no user found
 		return null;
 	}
+
+	/**
+	 * Get the user id associated with the passed in Authorization HTTP header (JWT token)
+	 * @param authorizationHeader {@code Authorization} HTTP header value
+	 * @return User id associated with the passed in Authorization HTTP header (JWT token)
+	 */
+	public static String getUserIdFromAuthorizationHeader(String authorizationHeader) {
+		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
+		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
+
+		// The following check should never be true
+		if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
+			return "";
+		}
+
+		return clientUserRecord.getDbId();
+	}
 }

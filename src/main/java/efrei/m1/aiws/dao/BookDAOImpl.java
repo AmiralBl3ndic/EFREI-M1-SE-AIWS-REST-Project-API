@@ -29,7 +29,6 @@ public class BookDAOImpl implements DAO<Book>
 	static final String DB_COL_BOOK_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_BOOK_EDITOR = "EDITOR";
 	static final String DB_COL_BOOK_AGELIMIT = "AGELIMIT";
-	static final String DB_COL_BOOK_RATING = "RATING";
 
 	///endregion
 
@@ -43,9 +42,8 @@ public class BookDAOImpl implements DAO<Book>
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM BOOKS WHERE RELEASEDATE = ?";
 	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM BOOKS WHERE EDITOR = ?";
 	private static final String SQL_SELECT_BY_AGELIMIT = "SELECT * FROM BOOKS WHERE AGELIMIT = ?";
-	private static final String SQL_SELECT_BY_RATING = "SELECT * FROM BOOKS WHERE RATING = ?";
-	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_BOOK,ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR,AGELIMIT,RATING) VALUES (?,?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ?RATING = ?";
+	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_BOOK,ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR,AGELIMIT) VALUES (?,?,?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ? WHERE ID_BOOK = ?";
 	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
 	///endregion
 
@@ -70,7 +68,6 @@ public class BookDAOImpl implements DAO<Book>
 			final String description = book.getDescription();
 			final String releaseDate = book.getReleaseDate();
 			final String editor = book.getEditor();
-			final int rating = book.getRating();
 
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_INSERT_BOOK,true,book);
 			int state = preparedStatement.executeUpdate();
@@ -273,18 +270,5 @@ public class BookDAOImpl implements DAO<Book>
 		return null;
 	}
 
-	public Book findByRate(String id) {
-		List<Book> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_RATING, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting video-games records by the book rate ", e);
-		}
-
-		return null;
-	}
 }

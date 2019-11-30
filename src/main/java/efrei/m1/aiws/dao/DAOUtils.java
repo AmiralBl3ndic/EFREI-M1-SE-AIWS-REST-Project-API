@@ -1,9 +1,6 @@
 package efrei.m1.aiws.dao;
 
-import efrei.m1.aiws.model.Book;
-import efrei.m1.aiws.model.DVD;
-import efrei.m1.aiws.model.User;
-import efrei.m1.aiws.model.VideoGame;
+import efrei.m1.aiws.model.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -17,10 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static efrei.m1.aiws.dao.UserDAOImpl.*;
-import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 import static efrei.m1.aiws.dao.BookDAOImpl.*;
+import static efrei.m1.aiws.dao.VideoGameDAOImpl.*;
 import static efrei.m1.aiws.dao.DVDDAOImpl.*;
-
 
 /**
  * Static class to handle multiple DAO-related repetitive actions
@@ -80,34 +76,39 @@ public class DAOUtils {
 	public static Book mappingBook(@NonNull ResultSet resultSet) throws  SQLException {
 		Book book = new Book();
 		book.setBookId(resultSet.getString(DB_COL_BOOK_ID));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_USER_ID));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_AUTHOR));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_TITLE));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_TYPE));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_DESCRIPTION));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_EDITOR));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_AGELIMIT));
-		book.setBookId(resultSet.getString(DB_COL_BOOK_RATING));
+		book.setUserId(resultSet.getString(DB_COL_BOOK_USER_ID));
+		book.setAuthor(resultSet.getString(DB_COL_BOOK_AUTHOR));
+		book.setTitle(resultSet.getString(DB_COL_BOOK_TITLE));
+		book.setType(resultSet.getString(DB_COL_BOOK_TYPE));
+		book.setDescription(resultSet.getString(DB_COL_BOOK_DESCRIPTION));
+		book.setReleaseDate(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
+		book.setEditor(resultSet.getString(DB_COL_BOOK_EDITOR));
+		book.setAgeLimit(Integer.parseInt(resultSet.getString(DB_COL_BOOK_AGELIMIT)));
 		return book;
 	}
 
 	public static DVD mappingDVD(@NonNull ResultSet resultSet) throws SQLException {
 		DVD dvd = new DVD();
 		dvd.setDvdId(resultSet.getString(DB_COL_ID_DVD));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_ID_USER));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_TITLE));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_TYPE));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DESCRIPTION));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_EDITOR));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AUDIO));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RELEASEDATE));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AGELIMIT));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DURATION));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
+		dvd.setUserId(resultSet.getString(DB_COL_DVD_ID_USER));
+		dvd.setTitle(resultSet.getString(DB_COL_DVD_TITLE));
+		dvd.setType(resultSet.getString(DB_COL_DVD_TYPE));
+		dvd.setDescription(resultSet.getString(DB_COL_DVD_DESCRIPTION));
+		dvd.setEditor(resultSet.getString(DB_COL_DVD_EDITOR));
+		dvd.setAudio(resultSet.getString(DB_COL_DVD_AUDIO));
+		dvd.setReleaseDate(resultSet.getString(DB_COL_DVD_RELEASEDATE));
+		dvd.setAgeLimit(resultSet.getString(DB_COL_DVD_AGELIMIT));
+		dvd.setDuration(resultSet.getString(DB_COL_DVD_DURATION));
 		return dvd;
 	}
 
+	public static Comment<VideoGame> mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
+		Comment<VideoGame> comment = new Comment<>();
+		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
+		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
+		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
+		return comment;
+	}
 
 	///region silentClose
 
