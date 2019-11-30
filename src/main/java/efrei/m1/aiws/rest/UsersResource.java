@@ -1,13 +1,10 @@
 package efrei.m1.aiws.rest;
 
-import static efrei.m1.aiws.utils.Constants.*;
-
 import efrei.m1.aiws.dao.DAOException;
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.requests.UsersResourceRequest;
 import efrei.m1.aiws.model.requests.UsersResourceResponse;
-
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.AuthenticationService;
 import efrei.m1.aiws.service.JWTService;
@@ -17,7 +14,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
+
+import static efrei.m1.aiws.utils.Constants.*;
 
 @Path("/users")
 public class UsersResource {
@@ -74,7 +72,7 @@ public class UsersResource {
 	 * @param city City to set
 	 * @return HTTP {@link Response} to send back to the client
 	 */
-	private Response processPUT(String authorizationHeader, String userId, String email, String password, String city) throws SQLException {
+	private Response processPUT(String authorizationHeader, String userId, String email, String password, String city) {
 		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
 		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
 		User userToUpdate = UsersResource.userDAO.findBy(userId);
@@ -143,7 +141,7 @@ public class UsersResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
 		final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
 		User clientUserRecord = JWTService.getUserFromToken(jwtToken);
 		User userToDelete = UsersResource.userDAO.findBy(userId);
@@ -178,7 +176,7 @@ public class UsersResource {
 	public Response updateUser(
 		UsersResourceRequest body,
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
 		return this.processPUT(authorizationHeader, userId, body.getEmail(), body.getPassword(), body.getCity());
 	}
 
@@ -193,7 +191,7 @@ public class UsersResource {
 		@FormParam("password") String password,
 		@FormParam("city") String city,
 		@PathParam("id") String userId,
-		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws SQLException {
+		@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
 		return this.processPUT(authorizationHeader, userId, email, password, city);
 	}
 }
