@@ -129,7 +129,7 @@ public class VideoGamesResource {
 
 		// Handle "limit" url parameter
 		if (limitParam != null && !limitParam.isEmpty()) {
-			int maxRecords = Integer.parseInt(limitParam);
+			int maxRecords = Math.min(Integer.parseInt(limitParam), videoGames.size());
 			videoGames = new ArrayList<>(videoGames.subList(0, maxRecords));
 		}
 
