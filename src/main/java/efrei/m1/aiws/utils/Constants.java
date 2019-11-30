@@ -33,6 +33,7 @@ public class Constants {
 	public static final String VIDEOGAMES_ILLEGAL_FILTER_TYPE_INT = "Please specify a valid integer for URL parameter";
 	public static final String VIDEOGAMES_ERROR_CANNOT_CREATE_COMMENT = "Unable to create the comment";
 	public static final String VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS = "Unable to find comments";
+	public static final String VIDEOGAMES_ERROR_WRONG_AUTHORIZATION_HEADER = "Unable to find the user needed to delete the comment";
 	///endregion
 
 	///region Books
