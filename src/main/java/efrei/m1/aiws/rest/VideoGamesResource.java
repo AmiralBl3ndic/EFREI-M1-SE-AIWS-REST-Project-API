@@ -593,9 +593,13 @@ public class VideoGamesResource {
 			return Response.status(Response.Status.FORBIDDEN).entity(res).build();
 		}
 
-		// TODO: use videoGameDAO to delete comment
+		if (videoGameDAO.deleteComment(comment)) {  // Check if deletion "worked"
+			res.addItem(comment);
+			return Response.status(Response.Status.NO_CONTENT).entity(res).build();
+		}
 
-		return Response.status(Response.Status.NO_CONTENT).build();
+		res.setError(VIDEOGAMES_ERROR_COMMENT_NOT_DELETED);
+		return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
 	}
 	///endregion
 }
