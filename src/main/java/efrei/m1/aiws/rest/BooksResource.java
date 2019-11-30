@@ -1,4 +1,4 @@
-package efrei.m1.aiws.rest.filter;
+package efrei.m1.aiws.rest;
 
 
 import efrei.m1.aiws.dao.BookDAOImpl;
