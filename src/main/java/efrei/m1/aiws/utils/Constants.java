@@ -34,6 +34,7 @@ public class Constants {
 	public static final String VIDEOGAMES_ERROR_CANNOT_CREATE_COMMENT = "Unable to create the comment";
 	public static final String VIDEOGAMES_ERROR_CANNOT_FIND_COMMENTS = "Unable to find comments";
 	public static final String VIDEOGAMES_ERROR_WRONG_AUTHORIZATION_HEADER = "Unable to find the user needed to delete the comment";
+	public static final String VIDEOGAMES_ERROR_COMMENT_NOT_FOUND = "Unable to find comment";
 	///endregion
 
 	///region Books
