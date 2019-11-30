@@ -30,7 +30,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	static final String DB_COL_DVD_RELEASEDATE = "RELEASEDATE";
 	static final String DB_COL_DVD_AGELIMIT = "AGELIMIT";
 	static final String DB_COL_DVD_DURATION = "DURATION";
-	static final String DB_COL_DVD_RATING = "RATING";
+	//static final String DB_COL_DVD_RATING = "RATING";
 	///endregion
 
 	///region SQL QUERIES
@@ -44,9 +44,9 @@ public class DVDDAOImpl implements DAO<DVD> {
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM DVDS WHERE RELEASEDATE = ?";
 	private static final String SQL_SELECT_AGELIMIT = "SELECT * FROM DVDS WHERE AGELIMIT = ?";
 	private static final String SQL_SELECT_DURATION = "SELECT * FROM DVDS WHERE DURATION = ?";
-	private static final String SQL_SELECT_RATING = "SELECT * FROM DVDS WHERE RATING = ?";
+	//private static final String SQL_SELECT_RATING = "SELECT * FROM DVDS WHERE RATING = ?";
 	private static final String SQL_INSERT_DVD = "INSERT INTO DVDS(ID_USER,AGELIMIT,DURATION,TITLE,TYPE,DESCRIPTION,EDITOR,AUDIO,RELEASEDATE) VALUES (?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ?, RATING = ?";
+	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
 	///endregion
 
@@ -104,7 +104,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_DVD, false, dvd.getDvdId(), dvd.getUserId(), dvd.getAgeLimit(), dvd.getDuration(), dvd.getTitle(), dvd.getType(), dvd.getDescription(), dvd.getEditor(), dvd.getAudio(), dvd.getReleaseDate(), dvd.getRating());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_DVD, false, dvd.getDvdId(), dvd.getUserId(), dvd.getAgeLimit(), dvd.getDuration(), dvd.getTitle(), dvd.getType(), dvd.getDescription(), dvd.getEditor(), dvd.getAudio(), dvd.getReleaseDate());
 
 			int state = preparedStatement.executeUpdate();
 
@@ -328,7 +328,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return null;
 	}
 
-	public DVD findByRating(String id) {
+	/*public DVD findByRating(String id) {
 		List<DVD> candidates;
 		try {
 			candidates = this.selectBy(SQL_SELECT_RATING, id);
@@ -341,5 +341,5 @@ public class DVDDAOImpl implements DAO<DVD> {
 		}
 
 		return null;
-	}
+	}*/
 }
