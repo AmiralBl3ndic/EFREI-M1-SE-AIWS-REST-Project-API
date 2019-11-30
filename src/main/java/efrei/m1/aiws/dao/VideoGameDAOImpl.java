@@ -38,6 +38,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ? WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_SELECT_COMMENTS = "SELECT COMMENT_CONTENT FROM VIDEOGAMES v INNER JOIN VG_COMMENTS c on v.ID_VIDEO_GAME= c.ID_VG_COMMENTED WHERE ID_VIDEO_GAME=?";
+	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM vg_comments WHERE ID_VG_COMMENTED = ? AND COMMENT_ID = ?";
 	private static final String SQL_INSERT_COMMENT = "INSERT INTO VG_COMMENTS(ID_VG_COMMENTED, ID_COMMENTER_VG, COMMENT_CONTENT) VALUES (?, ?, ?)";
 	///endregion
 
@@ -300,6 +301,35 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		}
 
 		return comments;
+	}
+
+	/**
+	 * Select a single comment of a specified video-game
+	 * @param videoGameId ID of the {@link VideoGame} to look comments for
+	 * @param commentId Id of the {@link Comment} to look for
+	 * @return {@link Comment} database record if the request succeeded, {@code null} in any other case
+	 */
+	public Comment<VideoGame> selectCommentById(String videoGameId, String commentId) {
+		Comment<VideoGame> comment = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null ;
+		ResultSet resultSet = null;
+
+		try {
+			connection = this.daofactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_COMMENT_BY_ID,false, videoGameId, commentId);
+			resultSet=preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				comment = DAOUtils.mappingCommentVideoGames(resultSet);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING, "Unable to get comment #" + commentId + " of video-game #" + videoGameId, e);
+		} finally {
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
+		}
+
+		return comment;
 	}
 
 	/**
