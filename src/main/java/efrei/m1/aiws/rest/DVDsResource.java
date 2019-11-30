@@ -97,19 +97,19 @@ public class DVDsResource {
     ) {
         // Handle "creator" url parameter
         if (creatorParam != null && !creatorParam.isEmpty()) {
-            dvds.removeIf(DVD -> !DVD.getUserId().equals(creatorParam));
+            dvds.removeIf(dvd -> !dvd.getUserId().equals(creatorParam));
         }
 
         // Handle "keywords" url parameter
         if (keywordsParam != null && !keywordsParam.isEmpty()) {
-            dvds.removeIf(DVD -> FuzzySearch.weightedRatio(DVD.getTitle(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
+            dvds.removeIf(dvd -> FuzzySearch.weightedRatio(dvd.getTitle(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
         }
 
         // Handle "city" url parameter
         if (cityParam != null && !cityParam.isEmpty()) {
-            dvds.removeIf(DVD -> {
+            dvds.removeIf(dvd -> {
                 // Gather creator of dvd record
-                User creator = userDAO.findBy(DVD.getUserId());
+                User creator = userDAO.findBy(dvd.getUserId());
                 if (creator == null) {
                     return true;
                 }
@@ -121,7 +121,7 @@ public class DVDsResource {
         // Handle "start" url parameter
         if (startParam != null && !startParam.isEmpty()) {
             int minId = Integer.parseInt(startParam);
-            dvds.removeIf(DVD -> Integer.parseInt(DVD.getDvdId()) < minId);
+            dvds.removeIf(dvd -> Integer.parseInt(dvd.getDvdId()) < minId);
         }
 
         // Handle "limit" url parameter

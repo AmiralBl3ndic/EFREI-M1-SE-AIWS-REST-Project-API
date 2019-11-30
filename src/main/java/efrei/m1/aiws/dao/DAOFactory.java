@@ -1,5 +1,6 @@
 package efrei.m1.aiws.dao;
 
+import efrei.m1.aiws.model.DVD;
 import efrei.m1.aiws.model.User;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -88,4 +89,6 @@ public class DAOFactory {
 	{
 		return new VideoGameDAOImpl(this);
 	}
+
+	public DAO<DVD> getDVDDao() { return new DVDDAOImpl(this); }
 }

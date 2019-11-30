@@ -104,7 +104,7 @@ public class DAOUtils {
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RELEASEDATE));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_AGELIMIT));
 		dvd.setDvdId(resultSet.getString(DB_COL_DVD_DURATION));
-		dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
+		//dvd.setDvdId(resultSet.getString(DB_COL_DVD_RATING));
 		return dvd;
 	}
 
