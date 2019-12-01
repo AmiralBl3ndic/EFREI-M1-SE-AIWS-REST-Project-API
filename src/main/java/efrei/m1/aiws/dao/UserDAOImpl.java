@@ -28,6 +28,8 @@ public class UserDAOImpl implements DAO<User> {
 	private static final String SQL_UPDATE_USER="UPDATE USERS SET EMAIL = ?, PASSWORD = ?, CITY = ? WHERE ID_USER = ?";
 	private static final String DELETE_USER="DELETE FROM USERS WHERE ID_USER=?";
 
+
+
 	private DAOFactory daoFactory;
 
 	@Override
