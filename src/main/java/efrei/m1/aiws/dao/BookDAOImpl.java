@@ -48,6 +48,7 @@ public class BookDAOImpl implements DAO<Book> {
 	private static final String SQL_SELECT_COMMENTS = "SELECT COMMENT_CONTENT FROM BOOKS v INNER JOIN BOOK_COMMENTS c on v.ID_BOOK = c.ID_BOOK_COMMENTED WHERE ID_BOOK =?";
 	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM BOOK_COMMENTS WHERE ID_BOOK_COMMENTED = ? AND COMMENT_ID = ?";
 	private static final String SQL_INSERT_COMMENT = "INSERT INTO BOOK_COMMENTS(ID_BOOK_COMMENTED, ID_COMMENTER_, COMMENT_CONTENT) VALUES (?, ?, ?)";
+	private static final String SQL_UPDATE_COMMENT = "UPDATE BOOK_COMMENTS(ID_BOOK_COMMENTED = ?, ID_COMMENTER = ?, COMMENT_CONTENT = ?";
 	private static final String SQL_DELETE_COMMENT = "DELETE FROM BOOK_COMMENTS WHERE COMMENT_ID = ?";
 	///endregion
 
@@ -279,9 +280,28 @@ public class BookDAOImpl implements DAO<Book> {
 		}
 	}
 
-	public oolean updateComment(Commment comment)
-	{
-		
+	public void updateComment(Comment comment) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		if (comment.getDbId() == null) {
+			logger.log(Level.WARNING, "Error: unable to find book comment to update!");
+		}
+
+		try {
+			connection = this.daoFactory.getConnection();
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_COMMENT, false, comment.getDbId(), comment.getContent(), comment.getCreatorId(), comment.getResourceId());
+
+			int state = preparedStatement.executeUpdate();
+
+			if(state == 0) {
+				logger.log(Level.WARNING, "Error : unable to update book comment!");
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARNING, "Error while update book comment record", e);
+		} finally {
+			DAOUtils.silentClose(preparedStatement, connection);
+		}
 	}
 
 	/**
