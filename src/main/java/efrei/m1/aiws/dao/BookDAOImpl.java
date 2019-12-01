@@ -46,10 +46,10 @@ public class BookDAOImpl implements DAO<Book> {
 	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ? WHERE ID_BOOK = ?";
 	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
 	/*------*/
-	private static final String SQL_SELECT_COMMENTS = "SELECT * FROM BOOKS v INNER JOIN B_COMMENTS c on v.ID_BOOK= c.ID_B_COMMENTED WHERE ID_BOOK=?";
-	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM b_comments WHERE ID_B_COMMENTED = ? AND COMMENT_ID = ?";
-	private static final String SQL_INSERT_COMMENT = "INSERT INTO B_COMMENTS(ID_B_COMMENTED, ID_COMMENTER_B, COMMENT_CONTENT) VALUES (?, ?, ?)";
-	private static final String SQL_DELETE_COMMENT = "DELETE FROM b_comments WHERE COMMENT_ID = ?";
+	private static final String SQL_SELECT_COMMENTS = "SELECT * FROM BOOKS v INNER JOIN BK_COMMENTS c on v.ID_BOOK= c.ID_BK_COMMENTED WHERE ID_BOOK=?";
+	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM bk_comments WHERE ID_BK_COMMENTED = ? AND COMMENT_ID = ?";
+	private static final String SQL_INSERT_COMMENT = "INSERT INTO BK_COMMENTS(ID_BK_COMMENTED, ID_COMMENTER_BK, COMMENT_CONTENT) VALUES (?, ?, ?)";
+	private static final String SQL_DELETE_COMMENT = "DELETE FROM bk_comments WHERE COMMENT_ID = ?";
 
 	///endregion
 
