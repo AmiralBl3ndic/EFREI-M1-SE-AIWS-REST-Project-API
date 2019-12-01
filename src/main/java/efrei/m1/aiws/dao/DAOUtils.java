@@ -114,6 +114,7 @@ public class DAOUtils {
 
 	public static Comment mappingCommentBooks(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
+		comment.setDbId((resultSet.getString("COMMENT_ID")));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_BOOK"));
 		comment.setResourceId(resultSet.getString("ID_BOOK_COMMENTED"));
 		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
@@ -122,6 +123,7 @@ public class DAOUtils {
 
 	public static Comment mappingCommentDVD(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
+		comment.setDbId((resultSet.getString("COMMENT_ID")));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_DVD"));
 		comment.setResourceId(resultSet.getString("ID_DVD_COMMENTED"));
 		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
