@@ -372,7 +372,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 		PreparedStatement preparedStatement = null;
 
 		if (comment.getDbId() == null) {
-			logger.log(Level.WARNING, "Error: unable to find comment to update");
+			logger.log(Level.WARNING, "Error: unable to find VG comment to update");
 		}
 
 		try {
@@ -382,10 +382,10 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 			int state = preparedStatement.executeUpdate();
 
 			if(state == 0) {
-				logger.log(Level.WARNING, "Error : unable to update comment");
+				logger.log(Level.WARNING, "Error : unable to update VG comment");
 			}
 		} catch (SQLException e) {
-			logger.log(Level.WARNING, "Error while update comment record", e);
+			logger.log(Level.WARNING, "Error while update VG comment record", e);
 		} finally {
 			DAOUtils.silentClose(preparedStatement, connection);
 		}
