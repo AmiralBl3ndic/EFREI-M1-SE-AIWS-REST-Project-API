@@ -112,6 +112,15 @@ public class DAOUtils {
 		return comment;
 	}
 
+	public static Comment mappingCommentBooks(@NonNull ResultSet resultSet) throws SQLException {
+		Comment comment = new Comment();
+		comment.setDbId(resultSet.getString("COMMENT_ID"));
+		comment.setCreatorId(resultSet.getString("ID_COMMENTER_BK"));
+		comment.setResourceId(resultSet.getString("ID_BK_COMMENTED"));
+		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
+		return comment;
+	}
+
 	///region silentClose
 
 	public static void silentClose(Statement statement) {
