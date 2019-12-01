@@ -50,7 +50,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	private static final String SQL_SELECT_COMMENT = "SELECT COMMENT_CONTENT FROM DVDs d INNER JOIN DVD_COMMENTS c on d.ID_DVD= c.ID_DVD_COMMENTED WHERE ID_DVD=?";
 	///endregion
 
-	private static final Logger logger = Logger.getLogger(VideoGameDAOImpl.class.getName());
+	private static final Logger logger = Logger.getLogger(DVDDAOImpl.class.getName());
 	///endregion
 	private DAOFactory daofactory;
 
@@ -147,27 +147,22 @@ public class DVDDAOImpl implements DAO<DVD> {
 	@Override
 	public DVD findBy(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_ID_DVD, id);
+		candidates = this.selectBy(SQL_SELECT_BY_ID_DVD, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the DVD's id", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
 	}
 
-	private List<DVD> selectBy(String sqlQuerySelector, String value) throws SQLException {
+	private List<DVD> selectBy(String sqlQuerySelector, String value) {
 		List<DVD> dvd = new ArrayList<>();
-		Connection connection;
-		PreparedStatement preparedStatement;
-		ResultSet resultSet;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 
 		try {
-
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
 			resultSet = preparedStatement.executeQuery();
@@ -175,12 +170,12 @@ public class DVDDAOImpl implements DAO<DVD> {
 			while(resultSet.next()) {
 				dvd.add(DAOUtils.mappingDVD(resultSet));
 			}
-
-			DAOUtils.silentClose(resultSet, preparedStatement, connection);
-
 		} catch(Exception e) {
 			throw new DAOException(e);
+		} finally {
+			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
+
 		return dvd;
 	}
 
@@ -210,14 +205,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByUserID(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
+		candidates = this.selectBy(SQL_SELECT_BY_ID_USER, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the user's id", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -225,14 +216,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByName(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
+		candidates = this.selectBy(SQL_SELECT_BY_NAME, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the name", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -240,14 +227,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByType(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
+		candidates = this.selectBy(SQL_SELECT_BY_TYPE, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the type", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -255,14 +238,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByEditor(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
+		candidates = this.selectBy(SQL_SELECT_BY_EDITOR, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the editor", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -270,14 +249,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByAudio(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_AUDIO, id);
+		candidates = this.selectBy(SQL_SELECT_BY_AUDIO, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the audio", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -285,14 +260,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByReleaseDate(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
+		candidates = this.selectBy(SQL_SELECT_BY_RELEASEDATE, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the release date", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -300,14 +271,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByAgeLimit(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_AGELIMIT, id);
+		candidates = this.selectBy(SQL_SELECT_AGELIMIT, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the limit age", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
@@ -315,14 +282,10 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	public DVD findByDuration(String id) {
 		List<DVD> candidates;
-		try {
-			candidates = this.selectBy(SQL_SELECT_DURATION, id);
+		candidates = this.selectBy(SQL_SELECT_DURATION, id);
 
-			if (candidates.size() >= 1) {
-				return candidates.get(0);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARNING,"Unable to get candidates while selecting DVD records by the duration", e);
+		if (!candidates.isEmpty()) {
+			return candidates.get(0);
 		}
 
 		return null;
