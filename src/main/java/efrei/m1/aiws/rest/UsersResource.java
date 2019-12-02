@@ -93,9 +93,9 @@ public class UsersResource {
 		}
 
 		// Update user record fields
-		userToUpdate.setEmail(email);
-		userToUpdate.setPassword(AuthenticationService.hashWithBCrypt(password));
-		userToUpdate.setCity(city);
+		userToUpdate.setEmail(email != null && !email.isEmpty() ? email : userToUpdate.getEmail());
+		userToUpdate.setPassword(password != null && !password.isEmpty() ? AuthenticationService.hashWithBCrypt(password) : userToUpdate.getPassword());
+		userToUpdate.setCity(city != null && !city.isEmpty() ? city : userToUpdate.getCity());
 
 		UsersResourceResponse res = new UsersResourceResponse();
 		res.setId(userToUpdate.getDbId());

@@ -1,11 +1,13 @@
 package efrei.m1.aiws.rest;
 
-
+import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.BookDAOImpl;
-import efrei.m1.aiws.model.Book;
 import efrei.m1.aiws.model.User;
+import efrei.m1.aiws.model.Book;
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
-import efrei.m1.aiws.service.JWTService;
+import efrei.m1.aiws.service.AuthenticationService;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,8 +26,7 @@ import static efrei.m1.aiws.utils.Constants.*;
  * Simple class to represent the incoming HTTP Request JSON Object
  */
 @Data @NoArgsConstructor
-class BookResourceResquest {
-    private String userID;
+class BookResourceRequest {
     private String author;
     private String title;
     private String type;
@@ -40,12 +41,36 @@ class BookResourceResquest {
 @Data @NoArgsConstructor
 class BookResourceResponse {
     private String error = "";
-    private List<Book> bookItems = new ArrayList<>();
 
-    void addBookItem(Book bookItem){
-        this.bookItems.add(bookItem);
+    private List<Book> items = new ArrayList<>();
+
+    void addItem(Book item) {
+        this.items.add(item);
     }
 }
+
+/**
+ * Simple class to represent the incoming HTTP Request JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class BookResourceCommentRequest {
+    private String comment;
+}
+
+/**
+ * Simple class to represent the outgoing HTTP Response JSON Object for comments-related requests
+ */
+@Data @NoArgsConstructor
+class BookResourceCommentResponse {
+    private String error = "";
+
+    private List<Comment> items = new ArrayList<>();
+
+    void addItem(Comment item) {
+        this.items.add(item);
+    }
+}
+
 
 @Path("/books")
 public class BooksResource {
@@ -53,100 +78,142 @@ public class BooksResource {
     @Setter
     private static BookDAOImpl bookDAO;
 
+    @Setter
+    private static UserDAOImpl userDAO;
+
     /**
-     * Get the user id associated with the passed in Authorization HTTP header (JWT token)
-     * @param authorizationHeader {@code Authorization} HTTP header value
-     * @return User id associated with the passed in Authorization HTTP header (JWT token)
+     * Applies the requests URL parameters (that we call filters)
+     * @param books List of {@link Book}s to perform the filtering on
+     * @param limitParam Maximum number of items to return
+     * @param startParam Minimum (inclusive) id of the records to return
+     * @param keywordsParam Keywords to look for (records below {@code FUZZY_SEARCH_MATCH_THRESHOLD} similarity will be excluded)
+     * @param creatorParam Id of the user who created the record
+     * @param cityParam City to look for records in
+     * @return List of {@link Book}s that meet all the filters requirements
      */
-    private String getUserIdFromAuthorizationHeader(String authorizationHeader) {
-        final String jwtToken = JWTService.extractTokenFromHeader(authorizationHeader);
-        User clientUserRecord = JWTService.getUserFromToken(jwtToken);
-
-        // The following check should never be true
-        if (clientUserRecord == null || clientUserRecord.getDbId() == null) {
-            return "";
-        }
-
-        return clientUserRecord.getDbId();
-    }
-
-    ///region GET requests
-    /**
-     * Get the list of all books records in the database
-     * @return List of all books records in the database
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getBooks(
-            @QueryParam("limit") String limitParam,
-            @QueryParam("start") String startParam,
-            @QueryParam("keywords") String keywordsParam
+    private ArrayList<Book> applyGetUrlParameters(
+            ArrayList<Book> books,
+            String limitParam,
+            String startParam,
+            String keywordsParam,
+            String creatorParam,
+            String cityParam
     ) {
-        BookResourceResponse res = new BookResourceResponse();
-
-        ArrayList<Book> books = (ArrayList<Book>) bookDAO.findAll();
+        // Handle "creator" url parameter
+        if (creatorParam != null && !creatorParam.isEmpty()) {
+            books.removeIf(book -> !book.getUserId().equals(creatorParam));
+        }
 
         // Handle "keywords" url parameter
         if (keywordsParam != null && !keywordsParam.isEmpty()) {
             books.removeIf(book -> FuzzySearch.weightedRatio(book.getTitle(), keywordsParam) < FUZZY_SEARCH_MATCH_THRESHOLD);
         }
 
-            // Handle "start" url parameter
+        // Handle "city" url parameter
+        if (cityParam != null && !cityParam.isEmpty()) {
+            books.removeIf(book -> {
+                // Gather creator of video-game record
+                User creator = userDAO.findBy(book.getUserId());
+                if (creator == null) {
+                    return true;
+                }
+
+                return !creator.getCity().equalsIgnoreCase(cityParam);
+            });
+        }
+
+        // Handle "start" url parameter
         if (startParam != null && !startParam.isEmpty()) {
-            // Check parameter value (must be of int type and greater than 0)
-            int start;
-            try {
-                start = Integer.parseInt(startParam);
-            } catch (NumberFormatException e) {
-                res.setError(BOOKS_ILLEGAL_FILTER_TYPE_INT);
-                return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-            }
-
-            if (start < 0) {
-                res.setError(BOOKS_ILLEGAL_FILTER_VALUE);
-                return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-            }
-
-            books.removeIf(book -> Integer.parseInt(book.getBookId()) < start);
+            int minId = Integer.parseInt(startParam);
+            books.removeIf(book -> Integer.parseInt(book.getBookId()) < minId);
         }
 
         // Handle "limit" url parameter
-        if (limitParam != null) {
-            // Check parameter value (must be of int type and greater than 0)
-            int limit;
-            try {
-                limit = Integer.parseInt(limitParam);
-            } catch (NumberFormatException e) {
-                res.setError(BOOKS_ILLEGAL_FILTER_TYPE_INT);
-                return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-            }
+        if (limitParam != null && !limitParam.isEmpty()) {
+            int maxRecords = Math.min(Integer.parseInt(limitParam), books.size());
+            books = new ArrayList<>(books.subList(0, maxRecords));
+        }
 
-            if (limit < 0) {
-                res.setError(BOOKS_ILLEGAL_FILTER_VALUE);
+        return books;
+    }
+
+    /**
+     * Check whether an integer parameter is greater than 0 (so that it is usable)
+     * @param parameter {@link String} value of the parameter to check
+     * @return Whether an integer parameter is greater than 0 (so that it is usable)
+     */
+    private String isIntegerParameterValid(String parameter) {
+        int paramValue;
+
+        try {
+            paramValue = Integer.parseInt(parameter);
+        } catch (NumberFormatException e) {
+            return BOOKS_ILLEGAL_FILTER_TYPE_INT;
+        }
+
+        if (paramValue < 0) {
+            return BOOKS_ILLEGAL_FILTER_VALUE;
+        }
+
+        return "";
+    }
+
+
+    ///region GET requests
+    /**
+     * Get the list of all video-games records in the database
+     * @return List of all video-games records in the database
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBooks(
+            @QueryParam("limit") String limitParam,
+            @QueryParam("start") String startParam,
+            @QueryParam("keywords") String keywordsParam,
+            @QueryParam("creator") String creatorParam,
+            @QueryParam("city") String cityParam
+    ) {
+        BookResourceResponse res = new BookResourceResponse();
+
+        ArrayList<Book> books = (ArrayList<Book>) bookDAO.findAll();
+
+        // Check if "start" url parameter can be used
+        if (startParam != null && !startParam.isEmpty()) {
+            res.setError(this.isIntegerParameterValid(startParam));
+            if (!res.getError().equals("")) {
                 return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
-            }
-            if (limit < books.size()) {
-                books = new ArrayList<>(books.subList(0, limit));
             }
         }
-        res.setBookItems(books);
+
+        // Check if "limit" url parameter can be used
+        if (limitParam != null && !limitParam.isEmpty()) {
+            res.setError(this.isIntegerParameterValid(limitParam));
+            if (!res.getError().equals("")) {
+                return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+            }
+        }
+
+        // Apply filters
+        books = this.applyGetUrlParameters(books, limitParam, startParam, keywordsParam, creatorParam, cityParam);
+
+        res.setItems(books);
         return Response.ok().entity(res).build();
     }
 
     /**
      * Get the details of the book with database id {@code id}
-     * @param bookID Database id of the book to get the details of
+     * @param bookId Database id of the book to get the details of
      * @return Details of a specific book if it has a record in the database, {@code 404 NOT_FOUND} otherwise
      */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBookDetails(@PathParam("id") String bookID) {
+    public Response getBookDetails(@PathParam("id") String bookId) {
         BookResourceResponse res = new BookResourceResponse();
-        Book bookItem = bookDAO.findBy(bookID);
+        Book item = bookDAO.findBy(bookId);
 
-        if(bookID != null) {
-            res.addBookItem(bookItem);
+        if (item != null) {
+            res.addItem(item);
             return Response.ok().entity(res).build();
         } else {
             res.setError(BOOKS_ERROR_NOT_FOUND);
@@ -156,33 +223,61 @@ public class BooksResource {
 
     /**
      * Get the comments of the book with database id {@code id}
-     * @param bookID Database id of the book to get the comments of
+     * @param bookId Database id of the book to get the comments of
      * @return List tof comments of a specific book record if it has a record in the database, {@code 404 NOT_FOUND} otherwise
      */
     @GET
     @Path("{id}/comments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBookComments(@PathParam("id") String bookID) {
-        BookResourceResponse res = new BookResourceResponse();
-        Book bookItem = bookDAO.findBy(bookID);
+    public Response getBookComments(@PathParam("id") String bookId) {
+        BookResourceCommentResponse res = new BookResourceCommentResponse();
+        Book item = bookDAO.findBy(bookId);
 
-        if(bookItem != null) {
+        if (item == null) {
             res.setError(BOOKS_ERROR_NOT_FOUND);
             return Response.status(Response.Status.NOT_FOUND).entity(res).build();
         } else {
-            return Response.status(Response.Status.NOT_IMPLEMENTED).entity(res).build();
+            List<Comment> comments = bookDAO.selectAllComments(bookId);
+
+            if (comments == null) {
+                res.setError(BOOKS_ERROR_CANNOT_FIND_COMMENTS);
+                return Response.status(Response.Status.NOT_ACCEPTABLE).entity(res).build();
+            }
+
+            res.setItems(comments);
+            return Response.ok().entity(res).build();
         }
     }
+
+    @GET
+    @Path("{bookId}/comments/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBookComment(
+            @PathParam("bookId") String bookId,
+            @PathParam("commentId") String commentId
+    ) {
+        BookResourceCommentResponse res = new BookResourceCommentResponse();
+        Comment comment = bookDAO.selectCommentById(bookId, commentId);
+
+        if (comment == null) {
+            res.setError(BOOKS_ERROR_COMMENT_NOT_FOUND);
+            return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+        }
+
+        res.addItem(comment);
+        return Response.ok().entity(res).build();
+    }
     ///endregion
+
 
     ///region POST requests
     /**
      * Handle the {@code POST} requests made to the /books endpoint
-     * @param userID Database id of the user that creates the record
+     * @param userId Database id of the user that creates the record
      * @return HTTP Response to send to the user
      */
     private Response handlePostBooks(
-            String userID,
+            String userId,
             String author,
             String title,
             String type,
@@ -191,24 +286,24 @@ public class BooksResource {
             String editor
     ) {
         BookResourceResponse res = new BookResourceResponse();
-        Book newBook = new Book();
+        Book newRecord = new Book();
 
-        newBook.setUserId(userID);
-        newBook.setAuthor(author);
-        newBook.setTitle(title);
-        newBook.setType(type);
-        newBook.setDescription(description);
-        newBook.setReleaseDate(releaseDate);
-        newBook.setEditor(editor);
+        newRecord.setUserId(userId);
+        newRecord.setAuthor(author);
+        newRecord.setTitle(title);
+        newRecord.setType(type);
+        newRecord.setDescription(description);
+        newRecord.setReleaseDate(releaseDate);
+        newRecord.setEditor(editor);
 
-        bookDAO.create(newBook);
+        bookDAO.create(newRecord);
 
-        if(newBook.getBookId() == null) { // Check if request failed
+        if (newRecord.getBookId() == null) {  // Check if request failed
             res.setError(BOOKS_ERROR_NOT_CREATED);
             return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
         } else {
             res.setError("");
-            res.addBookItem(newBook);
+            res.addItem(newRecord);
             return Response.status(Response.Status.CREATED).entity(res).build();
         }
     }
@@ -217,9 +312,31 @@ public class BooksResource {
      * Handle the {@code POST} requests made to the /books/{id}/comments endpoint
      * @return HTTP Response to send to the user
      */
-    private Response handlePostBookComment(/* TODO : Implementer commentaires */) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    private Response handlePostBookComment(
+            String bookId,
+            String authorizationHeader,
+            String content
+    ) {
+        BookResourceCommentResponse res = new BookResourceCommentResponse();
+        final String creatorId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setCreatorId(creatorId);
+        comment.setResourceId(bookId);
+
+        bookDAO.createComment(comment);
+
+        // Check if database record creation succeeded
+        if (comment.getDbId() != null) {
+            res.addItem(comment);
+            return Response.status(Response.Status.CREATED).entity(res).build();
+        }
+
+        res.setError(BOOKS_ERROR_CANNOT_CREATE_COMMENT);
+        return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
     }
+
 
     /**
      * Creates a {@link Book} record in the database from a {@code 'application/json'} content type
@@ -232,19 +349,19 @@ public class BooksResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response postBook(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            BookResourceResquest body
+            BookResourceRequest body
     ) {
-        String userID = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+        String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
         // This should only be triggered when the passed in JWT is referencing a user that has been deleted
-        if(userID.isEmpty()) {
+        if (userId.isEmpty()) {
             BookResourceResponse res = new BookResourceResponse();
             res.setError(BOOKS_ERROR_NO_CLIENT_ACCOUNT);
             return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
         }
 
         return this.handlePostBooks(
-                userID,
+                userId,
                 body.getAuthor(),
                 body.getTitle(),
                 body.getType(),
@@ -271,17 +388,17 @@ public class BooksResource {
             @FormParam("releaseDate") String releaseDate,
             @FormParam("editor") String editor
     ) {
-        String userID = this.getUserIdFromAuthorizationHeader(authorizationHeader);
+        String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
 
         // This should only be triggered when the passed in JWT is referencing a user that has been deleted
-        if(userID.isEmpty()) {
+        if (userId.isEmpty()) {
             BookResourceResponse res = new BookResourceResponse();
             res.setError(BOOKS_ERROR_NO_CLIENT_ACCOUNT);
             return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
         }
 
         return this.handlePostBooks(
-                userID,
+                userId,
                 author,
                 title,
                 type,
@@ -298,13 +415,19 @@ public class BooksResource {
      */
     @POST
     @Path("{id}/comments")
+    @JWTTokenNeeded
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postBookComment(
-            /* TODO: create a simple class to hold the needed request parameters */
-            Object body
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @PathParam("id") String bookId,
+            BookResourceCommentRequest body
     ) {
-        return this.handlePostBookComment();
+        return this.handlePostBookComment(
+                bookId,
+                authorizationHeader,
+                body.getComment()
+        );
     }
 
     /**
@@ -313,12 +436,19 @@ public class BooksResource {
      */
     @POST
     @Path("{id}/comments")
+    @JWTTokenNeeded
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postBookComment(
-            /* TODO: define all the needed parameters */
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @PathParam("id") String bookId,
+            @FormParam("comment") String comment
     ) {
-        return this.handlePostBookComment();
+        return this.handlePostBookComment(
+                bookId,
+                authorizationHeader,
+                comment
+        );
     }
     ///endregion
 
@@ -330,7 +460,7 @@ public class BooksResource {
      */
     private Response handlePutBooks(
             String authorizationHeader,
-            String bookID,
+            String bookId,
             String author,
             String title,
             String type,
@@ -339,14 +469,15 @@ public class BooksResource {
             String editor
     ) {
         BookResourceResponse res = new BookResourceResponse();
-        final String userID = this.getUserIdFromAuthorizationHeader(authorizationHeader);
-        final Book book = bookDAO.findBy(bookID);
+        final String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+        final Book book = bookDAO.findBy(bookId);
 
-        if(book == null) {
+        if (book == null) {
             res.setError(BOOKS_ERROR_NOT_FOUND);
             return Response.status(Response.Status.NOT_FOUND).entity(res).build();
         }
-        if(!userID.equals(book.getUserId())) {
+
+        if (!userId.equals(book.getUserId())) {
             res.setError(BOOKS_ERROR_FORBIDDEN);
             return Response.status(Response.Status.FORBIDDEN).entity(res).build();
         }
@@ -360,13 +491,13 @@ public class BooksResource {
         book.setEditor(editor);
         bookDAO.update(book);
 
-        res.addBookItem(book);
+        res.addItem(book);
         return Response.ok().entity(res).build();
     }
 
     /**
      * Handle the {@code PUT} requests made to the /books/{id} endpoint
-     * @param bookID Database record id of the {@link Book} to update
+     * @param bookId Database record id of the {@link Book} to update
      * @param body JSON representation of the {@link Book} to update
      * @return HTTP response to send to the user
      */
@@ -377,12 +508,12 @@ public class BooksResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response putBook(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @PathParam("id") String bookID,
-            BookResourceResquest body
+            @PathParam("id") String bookId,
+            BookResourceRequest body
     ) {
         return this.handlePutBooks(
                 authorizationHeader,
-                bookID,
+                bookId,
                 body.getAuthor(),
                 body.getTitle(),
                 body.getType(),
@@ -399,7 +530,7 @@ public class BooksResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response putBook(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @PathParam("id") String bookID,
+            @PathParam("id") String bookId,
             @FormParam("author") String author,
             @FormParam("title") String title,
             @FormParam("type") String type,
@@ -407,9 +538,9 @@ public class BooksResource {
             @FormParam("releaseDate") String releaseDate,
             @FormParam("editor") String editor
     ) {
-        return handlePutBooks(
+        return this.handlePutBooks(
                 authorizationHeader,
-                bookID,
+                bookId,
                 author,
                 title,
                 type,
@@ -420,34 +551,67 @@ public class BooksResource {
     }
     ///endregion
 
+
     ///region DELETE requests
     @DELETE
-    @JWTTokenNeeded
     @Path("{id}")
+    @JWTTokenNeeded
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteBook(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @PathParam("id") String bookID
+            @PathParam("id") String bookId
     ) {
         BookResourceResponse res = new BookResourceResponse();
-        String userID = this.getUserIdFromAuthorizationHeader(authorizationHeader);
-        Book book = bookDAO.findBy(bookID);
+        String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+        Book book = bookDAO.findBy(bookId);
 
-        if(bookID == null) {
+        if (book == null) {
             res.setError(BOOKS_ERROR_NOT_FOUND);
             return Response.status(Response.Status.NOT_FOUND).entity(res).build();
         }
 
         // Check if user has the right to delete the resource
-        if(!userID.equals(book.getUserId())) {
+        if (!userId.equals(book.getUserId())) {
             res.setError(BOOKS_ERROR_FORBIDDEN);
             return Response.status(Response.Status.FORBIDDEN).entity(res).build();
         }
 
         // Actually delete the resource
         bookDAO.delete(book);
-        res.addBookItem(book);
+        res.addItem(book);
         return Response.status(Response.Status.NO_CONTENT).entity(res).build();
+    }
+
+    @DELETE
+    @Path("{bookId}/comments/{commentId}")
+    @JWTTokenNeeded
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBookComment(
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @PathParam("bookId") String bookId,
+            @PathParam("commentId") String commentId
+    ) {
+        BookResourceCommentResponse res = new BookResourceCommentResponse();
+        String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
+        Comment comment = bookDAO.selectCommentById(bookId, commentId);
+
+        if (comment == null) {
+            res.setError(BOOKS_ERROR_COMMENT_NOT_FOUND);
+            return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+        }
+
+        if (!userId.equals(comment.getCreatorId())) {
+            res.setError(BOOKS_ERROR_FORBIDDEN);
+            return Response.status(Response.Status.FORBIDDEN).entity(res).build();
+        }
+
+        if (bookDAO.deleteComment(comment)) {  // Check if deletion "worked"
+            res.addItem(comment);
+            return Response.status(Response.Status.NO_CONTENT).entity(res).build();
+        }
+
+        res.setError(BOOKS_ERROR_COMMENT_NOT_DELETED);
+        return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
     }
     ///endregion
 }

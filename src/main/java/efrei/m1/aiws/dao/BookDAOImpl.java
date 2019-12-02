@@ -1,8 +1,8 @@
 package efrei.m1.aiws.dao;
 
 import efrei.m1.aiws.model.Book;
-
 import efrei.m1.aiws.model.Comment;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -44,12 +44,14 @@ public class BookDAOImpl implements DAO<Book> {
 	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_BOOK,ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR,AGELIMIT) VALUES (?,?,?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ? WHERE ID_BOOK = ?";
 	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
-
-	private static final String SQL_SELECT_COMMENTS = "SELECT COMMENT_CONTENT FROM BOOKS v INNER JOIN BOOK_COMMENTS c on v.ID_BOOK = c.ID_BOOK_COMMENTED WHERE ID_BOOK =?";
+	///region SQL Queries on Comments
+	private static final String SQL_SELECT_COMMENTS = "SELECT * FROM BOOKS v INNER JOIN BOOK_COMMENTS c on v.ID_BOOK= c.ID_BOOK_COMMENTED WHERE ID_BOOK=?";
 	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM BOOK_COMMENTS WHERE ID_BOOK_COMMENTED = ? AND COMMENT_ID = ?";
-	private static final String SQL_INSERT_COMMENT = "INSERT INTO BOOK_COMMENTS(ID_BOOK_COMMENTED, ID_COMMENTER_, COMMENT_CONTENT) VALUES (?, ?, ?)";
-	private static final String SQL_UPDATE_COMMENT = "UPDATE BOOK_COMMENTS(ID_BOOK_COMMENTED = ?, ID_COMMENTER = ?, COMMENT_CONTENT = ?";
+	private static final String SQL_INSERT_COMMENT = "INSERT INTO BOOK_COMMENTS(ID_BOOK_COMMENTED, ID_COMMENTER_BOOK, COMMENT_CONTENT) VALUES (?, ?, ?)";
 	private static final String SQL_DELETE_COMMENT = "DELETE FROM BOOK_COMMENTS WHERE COMMENT_ID = ?";
+	private static final String SQL_UPDATE_COMMENT = "UPDATE BOOK_COMMENTS(ID_BOOK_COMMENTED = ?, ID_COMMENTER = ?, COMMENT_CONTENT = ?";
+	///endregion
+	
 	///endregion
 
 	private static final Logger logger = Logger.getLogger(BookDAOImpl.class.getName());
