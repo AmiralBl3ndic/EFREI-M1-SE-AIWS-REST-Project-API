@@ -162,7 +162,6 @@ public class DVDDAOImpl implements DAO<DVD> {
 		ResultSet resultSet = null;
 
 		try {
-
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
 			resultSet = preparedStatement.executeQuery();
@@ -179,11 +178,11 @@ public class DVDDAOImpl implements DAO<DVD> {
 		return dvds;
 	}
 
-	public DVD findAll() {
+	public List<DVD> findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		DVD dvd = null;
+		List<DVD> dvd = new ArrayList<DVD>();
 
 		try {
 			connection = this.daofactory.getConnection();
@@ -191,7 +190,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 			resultSet = preparedStatement.executeQuery();
 
 			if(resultSet.next()) {
-				dvd = DAOUtils.mappingDVD(resultSet);
+				dvd.add(DAOUtils.mappingDVD(resultSet));
 			}
 
 		} catch (SQLException e) {

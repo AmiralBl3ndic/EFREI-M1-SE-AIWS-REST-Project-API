@@ -3,15 +3,18 @@ package efrei.m1.aiws.dao;
 import efrei.m1.aiws.model.Book;
 import efrei.m1.aiws.model.Comment;
 
+import efrei.m1.aiws.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -299,12 +302,14 @@ public class BookDAOImpl implements DAO<Book> {
 			if(state == 0) {
 				logger.log(Level.WARNING, "Error : unable to update book comment!");
 			}
+
 		} catch (SQLException e) {
 			logger.log(Level.WARNING, "Error while update book comment record", e);
 		} finally {
 			DAOUtils.silentClose(preparedStatement, connection);
 		}
 	}
+
 
 	/**
 	 * Deletes the passed in {@link Comment} record from the database
