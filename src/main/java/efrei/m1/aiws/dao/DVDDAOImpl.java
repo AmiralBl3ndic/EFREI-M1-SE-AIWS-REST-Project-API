@@ -162,7 +162,6 @@ public class DVDDAOImpl implements DAO<DVD> {
 		ResultSet resultSet = null;
 
 		try {
-
 			connection = this.daofactory.getConnection();
 			preparedStatement = DAOUtils.initPreparedStatement(connection, sqlQuerySelector, false, value);
 			resultSet = preparedStatement.executeQuery();
