@@ -306,11 +306,11 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 	/**
 	 * Select a single comment of a specified DVD
-	 * @param DVDID ID of the {@link DVD} to look comments for
+	 * @param dvdId ID of the {@link DVD} to look comments for
 	 * @param commentId Id of the {@link Comment} to look for
 	 * @return {@link Comment} database record if the request succeeded, {@code null} in any other case
 	 */
-	public Comment selectCommentById(String DVDID, String commentId) {
+	public Comment selectCommentById(String dvdId, String commentId) {
 		Comment comment = null;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null ;
@@ -318,14 +318,14 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_COMMENT_BY_ID,false, DVDID, commentId);
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_COMMENT_BY_ID,false, dvdId, commentId);
 			resultSet=preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
 				comment = DAOUtils.mappingCommentDVD(resultSet);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.WARNING, "Unable to get comment #" + commentId + " of DVD #" + DVDID, e);
+			logger.log(Level.WARNING, "Unable to get comment #" + commentId + " of DVD #" + dvdId, e);
 		} finally {
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
