@@ -2,6 +2,7 @@ package efrei.m1.aiws.rest;
 
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.DVDDAOImpl;
+import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.DVD;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
@@ -50,6 +51,19 @@ class DVDResourceResponse {
     }
 }
 
+@NoArgsConstructor @Data
+class DVDRessourceCommentRequest{
+    String comment;
+}
+
+class DVDRessourceCommentResponse{
+    private String error = "";
+    private List<Comment> items = new ArrayList<>();
+
+    void addItem(Comment item){
+        this.items.add(item);
+    }
+}
 
 @Path("/dvds")
 public class DVDsResource {
