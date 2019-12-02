@@ -408,7 +408,7 @@ public class DVDsResource {
 
     /**
      * Creates a {@link DVD} {@code comment} record in the database from a {@code 'application/json'} content type
-     * @param  JSON object containing the data needed to create a {@link DVD} {@code comment} record
+     * @param  resourceCommentRequest object containing the data needed to create a {@link DVD} {@code comment} record
      * @return HTTP Response to send to the user
      */
     @POST
@@ -486,6 +486,7 @@ public class DVDsResource {
         res.addItem(DVD);
         return Response.ok().entity(res).build();
     }
+
 
     /**
      * Handle the {@code PUT} requests made to the /dvds/{id} endpoint
