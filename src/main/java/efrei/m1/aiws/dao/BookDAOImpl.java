@@ -3,7 +3,6 @@ package efrei.m1.aiws.dao;
 import efrei.m1.aiws.model.Book;
 import efrei.m1.aiws.model.Comment;
 
-import efrei.m1.aiws.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
