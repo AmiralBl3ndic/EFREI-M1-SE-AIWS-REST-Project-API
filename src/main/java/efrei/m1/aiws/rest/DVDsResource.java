@@ -5,6 +5,7 @@ import efrei.m1.aiws.dao.DVDDAOImpl;
 import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.DVD;
+import efrei.m1.aiws.service.AuthenticationService;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
@@ -12,12 +13,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
+import javax.print.DocFlavor;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static efrei.m1.aiws.utils.Constants.*;
 
@@ -523,6 +526,21 @@ public class DVDsResource {
 
 
     ///region DELETE requests
+    @DELETE
+    @Path("{DVDId}/comments/{commentId}")
+    @JWTTokenNeeded
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCommentDVD(
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @PathParam("DVDId") String dvdId,
+            @PathParam("commentId") String commentId){
+
+        DVDRessourceCommentResponse res = new DVDRessourceCommentResponse();
+        //TODO
+
+    }
+
+
     @DELETE
     @Path("{id}")
     @JWTTokenNeeded
