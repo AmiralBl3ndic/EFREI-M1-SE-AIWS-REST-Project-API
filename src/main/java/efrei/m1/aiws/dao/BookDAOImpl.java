@@ -302,13 +302,14 @@ public class BookDAOImpl implements DAO<Book> {
 			if(state == 0) {
 				logger.log(Level.WARNING, "Error : unable to update book comment!");
 			}
+
 		} catch (SQLException e) {
 			logger.log(Level.WARNING, "Error while update book comment record", e);
 		} finally {
 			DAOUtils.silentClose(preparedStatement, connection);
 		}
 	}
-	}
+
 
 	/**
 	 * Deletes the passed in {@link Comment} record from the database
