@@ -25,6 +25,8 @@ import static efrei.m1.aiws.dao.DVDDAOImpl.*;
 public class DAOUtils {
 
 	private static String COMMENT_CONTENT = "COMMENT_CONTENT";
+	private static String COMMENT_ID = "COMMENT_ID";
+
 
 	private static final Logger logger = Logger.getLogger(DAOUtils.class.getName());
 
@@ -107,15 +109,16 @@ public class DAOUtils {
 
 	public static Comment mappingCommentVideoGames(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
-		comment.setDbId(resultSet.getString(COMMENT_CONTENT));
+		comment.setDbId(resultSet.getString(COMMENT_ID));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_VG"));
 		comment.setResourceId(resultSet.getString("ID_VG_COMMENTED"));
-		comment.setContent(resultSet.getString("COMMENT_CONTENT"));
+		comment.setContent(resultSet.getString(COMMENT_CONTENT));
 		return comment;
 	}
 
 	public static Comment mappingCommentBooks(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
+		comment.setDbId(resultSet.getString(COMMENT_ID));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_BOOK"));
 		comment.setResourceId(resultSet.getString("ID_BOOK_COMMENTED"));
 		comment.setContent(resultSet.getString(COMMENT_CONTENT));
@@ -124,6 +127,7 @@ public class DAOUtils {
 
 	public static Comment mappingCommentDVD(@NonNull ResultSet resultSet) throws SQLException {
 		Comment comment = new Comment();
+		comment.setDbId(resultSet.getString(COMMENT_ID));
 		comment.setCreatorId(resultSet.getString("ID_COMMENTER_DVD"));
 		comment.setResourceId(resultSet.getString("ID_DVD_COMMENTED"));
 		comment.setContent(resultSet.getString(COMMENT_CONTENT));
