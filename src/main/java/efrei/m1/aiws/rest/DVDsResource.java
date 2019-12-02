@@ -190,7 +190,7 @@ public class DVDsResource {
     ) {
         DVDResourceResponse res = new DVDResourceResponse();
 
-        ArrayList<DVD> DVDs = (ArrayList<DVD>) dvdDAO.findAll();
+        ArrayList<DVD> dvds = (ArrayList<DVD>) dvdDAO.findAll();
 
         // Check if "start" url parameter can be used
         if (startParam != null && !startParam.isEmpty()) {
@@ -209,9 +209,9 @@ public class DVDsResource {
         }
 
         // Apply filters
-        DVDs = this.applyGetUrlParameters(DVDs, limitParam, startParam, keywordsParam, creatorParam, cityParam);
+        dvds = this.applyGetUrlParameters(dvds, limitParam, startParam, keywordsParam, creatorParam, cityParam);
 
-        res.setItems(DVDs);
+        res.setItems(dvds);
         return Response.ok().entity(res).build();
     }
 
