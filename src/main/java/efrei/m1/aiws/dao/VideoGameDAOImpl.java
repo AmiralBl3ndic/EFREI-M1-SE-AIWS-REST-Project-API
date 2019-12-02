@@ -35,7 +35,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 	private static final String SQL_SELECT_BY_EDITOR = "SELECT * FROM VIDEOGAMES WHERE VIDEO_GAME_EDITOR = ?";
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM VIDEOGAMES WHERE RELEASEDATE = ?";
 	private static final String SQL_INSERT_VIDEOGAME = "INSERT INTO VIDEOGAMES(ID_VIDEO_GAME, ID_USERS, NAME, TYPE, RESUME, VIDEO_GAME_EDITOR, RELEASEDATE) VALUES (?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_VIDEO_GAME = ?, ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ? WHERE ID_VIDEO_GAME = ?";
+	private static final String SQL_UPDATE_VIDEOGAME = "UPDATE VIDEOGAMES SET ID_USERS = ?, NAME = ?, TYPE = ?, RESUME = ?, VIDEO_GAME_EDITOR = ?, RELEASEDATE = ? WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM VIDEOGAMES WHERE ID_VIDEO_GAME = ?";
 	private static final String SQL_SELECT_COMMENTS = "SELECT * FROM VIDEOGAMES v INNER JOIN VG_COMMENTS c on v.ID_VIDEO_GAME= c.ID_VG_COMMENTED WHERE ID_VIDEO_GAME=?";
 	private static final String SQL_SELECT_COMMENT_BY_ID = "SELECT * FROM vg_comments WHERE ID_VG_COMMENTED = ? AND COMMENT_ID = ?";
@@ -98,7 +98,7 @@ public class VideoGameDAOImpl implements DAO<VideoGame> {
 
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getVideoGameId(), videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_VIDEOGAME, false, videoGame.getUserId(), videoGame.getName(), videoGame.getType(), videoGame.getResume(), videoGame.getEditor(), videoGame.getReleaseDate(), videoGame.getVideoGameId());
 
 			int state = preparedStatement.executeUpdate();
 
