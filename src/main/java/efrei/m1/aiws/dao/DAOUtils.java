@@ -88,7 +88,6 @@ public class DAOUtils {
 		book.setDescription(resultSet.getString(DB_COL_BOOK_DESCRIPTION));
 		book.setReleaseDate(resultSet.getString(DB_COL_BOOK_RELEASEDATE));
 		book.setEditor(resultSet.getString(DB_COL_BOOK_EDITOR));
-		book.setAgeLimit(Integer.parseInt(resultSet.getString(DB_COL_BOOK_AGELIMIT)));
 		return book;
 	}
 
