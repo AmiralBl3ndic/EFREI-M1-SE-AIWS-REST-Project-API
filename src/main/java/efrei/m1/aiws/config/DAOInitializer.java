@@ -53,6 +53,7 @@ public class DAOInitializer implements ServletContextListener {
 		// Context Dependency Injection for DVDsResource
 		DVDsResource.setDvdDAO((DVDDAOImpl) daoFactory.getDVDDao());
 		DVDsResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
+
 	}
 
 	@Override

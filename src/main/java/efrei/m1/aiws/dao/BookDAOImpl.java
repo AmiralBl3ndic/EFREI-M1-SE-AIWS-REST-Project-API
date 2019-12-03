@@ -178,10 +178,11 @@ public class BookDAOImpl implements DAO<Book>
 		return books;
 	}
 
-	public Book findAll() {
+	public ArrayList<Book> findAll() {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
+		ArrayList<Book> bookArrayList = new ArrayList<>();
 		Book book = null;
 
 		try {
@@ -189,8 +190,9 @@ public class BookDAOImpl implements DAO<Book>
 			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_SELECT_ALL, false);
 			resultSet = preparedStatement.executeQuery();
 
-			if(resultSet.next()) {
+			while(resultSet.next()) {
 				book = DAOUtils.mappingBook(resultSet);
+				bookArrayList.add(book);
 			}
 
 		} catch (SQLException e) {
@@ -199,7 +201,7 @@ public class BookDAOImpl implements DAO<Book>
 			DAOUtils.silentClose(resultSet, preparedStatement, connection);
 		}
 
-		return book;
+		return bookArrayList;
 	}
 
 	public Book findByUserID(String id) {

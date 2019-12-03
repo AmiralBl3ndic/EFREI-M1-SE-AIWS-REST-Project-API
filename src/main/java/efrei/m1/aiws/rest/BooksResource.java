@@ -20,6 +20,8 @@ import java.util.List;
 
 import efrei.m1.aiws.utils.Constants;
 
+import static efrei.m1.aiws.utils.Constants.*;
+
 /**
  * Simple class to represent the incoming HTTP Request JSON Object
  */
