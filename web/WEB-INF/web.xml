@@ -4,6 +4,30 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 	
+	<listener>
+		<listener-class>efrei.m1.aiws.config.JWTInitializer</listener-class>
+	</listener>
+	<listener>
+		<listener-class>efrei.m1.aiws.config.DAOInitializer</listener-class>
+	</listener>
+	
+	<context-param>
+		<param-name>jwtIssuer</param-name>
+		<param-value>ST2AIWS</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>dbProperties</param-name>
+		<param-value>/WEB-INF/db.properties</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>efrei.m1.aiws.config.JWTInitializer</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>efrei.m1.aiws.config.DAOInitializer</listener-class>
+	</listener>
 	
 	<servlet>
 		<servlet-name>REST API</servlet-name>
