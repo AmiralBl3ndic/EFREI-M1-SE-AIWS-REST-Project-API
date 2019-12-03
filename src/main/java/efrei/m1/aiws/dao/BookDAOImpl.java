@@ -45,7 +45,7 @@ public class BookDAOImpl implements DAO<Book> {
 	private static final String SQL_SELECT_BY_TYPE = "SELECT * FROM BOOKS WHERE TYPE = ?";
 	private static final String SQL_SELECT_BY_RELEASEDATE = "SELECT * FROM BOOKS WHERE RELEASEDATE = ?";
 	private static final String SQL_INSERT_BOOK = "INSERT INTO BOOKS(ID_USERS,AUTHOR,TITLE,TYPE,DESCRIPTION,RELEASEDATE,EDITOR) VALUES (?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_BOOK = ?,ID_USERS = ?,AUTHOR = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,RELEASEDATE = ?,EDITOR = ?,AGELIMIT = ? WHERE ID_BOOK = ?";
+	private static final String SQL_UPDATE_BOOK = "UPDATE BOOKS SET ID_USERS = ?, AUTHOR = ?, TITLE = ?, TYPE = ?, DESCRIPTION = ?, RELEASEDATE = ?, EDITOR = ? WHERE ID_BOOK = ?";
 	private static final String SQL_DELETE_BOOK = "DELETE FROM BOOKS WHERE ID_BOOK = ?";
 	///region SQL Queries on Comments
 	private static final String SQL_SELECT_COMMENTS = "SELECT * FROM BOOKS v INNER JOIN BOOK_COMMENTS c on v.ID_BOOK= c.ID_BOOK_COMMENTED WHERE ID_BOOK=?";
@@ -110,7 +110,9 @@ public class BookDAOImpl implements DAO<Book> {
 
 		try {
 			connection = this.daoFactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_BOOK, true, book.getBookId(), book.getUserId(), book.getAuthor(), book.getTitle(), book.getType(), book.getDescription(), book.getReleaseDate(), book.getEditor(), book.getAgeLimit());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_BOOK, true, book.getUserId(), book.getAuthor(), book.getTitle(), book.getType(), book.getDescription(), book.getReleaseDate(), book.getEditor(), book.getBookId());
+
+			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DAOException(e);
 		} finally {
