@@ -1,12 +1,9 @@
 package efrei.m1.aiws.rest;
 
-import efrei.m1.aiws.dao.DAOUtils;
 import efrei.m1.aiws.dao.UserDAOImpl;
 import efrei.m1.aiws.dao.DVDDAOImpl;
-import efrei.m1.aiws.model.Comment;
 import efrei.m1.aiws.model.User;
 import efrei.m1.aiws.model.DVD;
-import efrei.m1.aiws.service.AuthenticationService;
 import efrei.m1.aiws.rest.filter.annotations.JWTTokenNeeded;
 import efrei.m1.aiws.service.JWTService;
 import lombok.Data;
@@ -14,14 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
-import javax.print.DocFlavor;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static efrei.m1.aiws.utils.Constants.*;
 
@@ -55,20 +50,6 @@ class DVDResourceResponse {
     }
 }
 
-@NoArgsConstructor @Data
-class DVDRessourceCommentRequest{
-    String comment;
-}
-
-@NoArgsConstructor @Data
-class DVDRessourceCommentResponse{
-    private String error = "";
-    private List<Comment> items = new ArrayList<>();
-
-    void addItem(Comment item){
-        this.items.add(item);
-    }
-}
 
 @Path("/dvds")
 public class DVDsResource {
@@ -190,7 +171,7 @@ public class DVDsResource {
     ) {
         DVDResourceResponse res = new DVDResourceResponse();
 
-        ArrayList<DVD> dvds = (ArrayList<DVD>) dvdDAO.findAll();
+        ArrayList<DVD> DVDs = (ArrayList<DVD>) dvdDAO.findAll();
 
         // Check if "start" url parameter can be used
         if (startParam != null && !startParam.isEmpty()) {
@@ -209,9 +190,9 @@ public class DVDsResource {
         }
 
         // Apply filters
-        dvds = this.applyGetUrlParameters(dvds, limitParam, startParam, keywordsParam, creatorParam, cityParam);
+        DVDs = this.applyGetUrlParameters(DVDs, limitParam, startParam, keywordsParam, creatorParam, cityParam);
 
-        res.setItems(dvds);
+        res.setItems(DVDs);
         return Response.ok().entity(res).build();
     }
 
@@ -220,7 +201,6 @@ public class DVDsResource {
      * @param DvdId Database id of the dvd to get the details of
      * @return Details of a specific dvd if it has a record in the database, {@code 404 NOT_FOUND} otherwise
      */
-
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -305,28 +285,8 @@ public class DVDsResource {
      * Handle the {@code POST} requests made to the /dvds/{id}/comments endpoint
      * @return HTTP Response to send to the user
      */
-    private Response handlePostDVDComment(String dvdId,
-                                          String authorizationHeader,
-                                          String content) {
-        DVDRessourceCommentResponse res = new DVDRessourceCommentResponse();
-        final String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
-        Comment comment = new Comment();
-        comment.setContent(content);
-        comment.setCreatorId(userId);
-        comment.setResourceId(dvdId);
-
-        dvdDAO.createComment(comment);
-
-        // Check if database record creation succeeded
-        if (comment.getDbId() != null) {
-            res.addItem(comment);
-            return Response.status(Response.Status.CREATED).entity(res).build();
-        }
-
-        res.setError(DVD_ERROR_CANNOT_CREATE_COMMENT);
-
-        return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
-
+    private Response handlePostDVDComment(/* TODO: define and insert parameters */) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 
@@ -408,18 +368,18 @@ public class DVDsResource {
 
     /**
      * Creates a {@link DVD} {@code comment} record in the database from a {@code 'application/json'} content type
-     * @param  resourceCommentRequest object containing the data needed to create a {@link DVD} {@code comment} record
+     * @param body JSON object containing the data needed to create a {@link DVD} {@code comment} record
      * @return HTTP Response to send to the user
      */
     @POST
     @Path("{id}/comments")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postDVDComment(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-                                    @PathParam("id") String dvdId,
-                                   VideoGameResourceCommentRequest resourceCommentRequest) {
-
-        return this.handlePostDVDComment(dvdId,authorizationHeader,resourceCommentRequest.getComment());
+    public Response postDVDComment(
+            /* TODO: create a simple class to hold the needed request parameters */
+            Object body
+    ) {
+        return this.handlePostDVDComment();
     }
 
     /**
@@ -431,12 +391,9 @@ public class DVDsResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postDVDComment(
-                                    @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-                                   @PathParam("id") String dvdId,
-                                   @FormParam("comment") String comment) {
-
-        return this.handlePostDVDComment(dvdId,authorizationHeader,comment);
-
+            /* TODO: define all the needed parameters */
+    ) {
+        return this.handlePostDVDComment();
     }
     ///endregion
 
@@ -486,7 +443,6 @@ public class DVDsResource {
         res.addItem(DVD);
         return Response.ok().entity(res).build();
     }
-
 
     /**
      * Handle the {@code PUT} requests made to the /dvds/{id} endpoint
@@ -552,48 +508,6 @@ public class DVDsResource {
 
 
     ///region DELETE requests
-
-    /**
-     * Deletes a comment made by a specific user
-     * @param authorizationHeader
-     * @param dvdId
-     * @param commentId
-     * @return
-     */
-    @DELETE
-    @Path("{DVDId}/comments/{commentId}")
-    @JWTTokenNeeded
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCommentDVD(
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @PathParam("DVDId") String dvdId,
-            @PathParam("commentId") String commentId){
-
-        DVDRessourceCommentResponse res = new DVDRessourceCommentResponse();
-        String userId = AuthenticationService.getUserIdFromAuthorizationHeader(authorizationHeader);
-        Comment comment = dvdDAO.selectCommentById(dvdId,commentId);
-
-        if (comment == null) {
-            res.setError(DVD_ERROR_COMMENT_NOT_FOUND);
-            return Response.status(Response.Status.NOT_FOUND).entity(res).build();
-        }
-
-        if (!userId.equals(comment.getCreatorId())) {
-            res.setError(DVDS_ERROR_FORBIDDEN);
-            return Response.status(Response.Status.FORBIDDEN).entity(res).build();
-        }
-
-        if (dvdDAO.deleteComment(comment)) {  // Check if deletion "worked"
-            res.addItem(comment);
-            return Response.status(Response.Status.NO_CONTENT).entity(res).build();
-        }
-        res.setError(DVD_ERROR_COMMENT_NOT_DELETED);
-        return Response.status(Response.Status.NOT_MODIFIED).entity(res).build();
-
-    }
-
-
-
     @DELETE
     @Path("{id}")
     @JWTTokenNeeded

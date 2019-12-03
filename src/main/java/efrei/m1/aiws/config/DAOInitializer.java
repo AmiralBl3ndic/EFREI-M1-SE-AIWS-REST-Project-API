@@ -1,5 +1,6 @@
 package efrei.m1.aiws.config;
 
+import efrei.m1.aiws.rest.DVDsResource;
 import efrei.m1.aiws.dao.*;
 import efrei.m1.aiws.rest.BooksResource;
 import efrei.m1.aiws.rest.UsersResource;
@@ -49,6 +50,11 @@ public class DAOInitializer implements ServletContextListener {
 		// Context Dependency Injection for VideoGamesResource
 		VideoGamesResource.setVideoGameDAO((VideoGameDAOImpl) daoFactory.getVideoGameDao());
 		VideoGamesResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
+
+		// Context Dependency Injection for DVDsResource
+		DVDsResource.setDvdDAO((DVDDAOImpl) daoFactory.getDVDDao());
+		DVDsResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
+
 
 		BooksResource.setUserDAO((UserDAOImpl) daoFactory.getUserDao());
 		BooksResource.setBookDAO((BookDAOImpl) daoFactory.getBookDao());
