@@ -24,8 +24,8 @@ import static efrei.m1.aiws.dao.DVDDAOImpl.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DAOUtils {
 
-	private static String COMMENT_CONTENT = "COMMENT_CONTENT";
-	private static String COMMENT_ID = "COMMENT_ID";
+	private static final String COMMENT_CONTENT = "COMMENT_CONTENT";
+	private static final String COMMENT_ID = "COMMENT_ID";
 
 
 	private static final Logger logger = Logger.getLogger(DAOUtils.class.getName());
