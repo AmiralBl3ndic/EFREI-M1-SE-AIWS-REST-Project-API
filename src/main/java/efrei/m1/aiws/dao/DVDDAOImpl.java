@@ -46,7 +46,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 	private static final String SQL_SELECT_DURATION = "SELECT * FROM DVDS WHERE DURATION = ?";
 	//private static final String SQL_SELECT_RATING = "SELECT * FROM DVDS WHERE RATING = ?";
 	private static final String SQL_INSERT_DVD = "INSERT INTO DVDS(ID_USER,AGELIMIT,DURATION,TITLE,TYPE,DESCRIPTION,EDITOR,AUDIO,RELEASEDATE) VALUES (?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_DVD = ?, ID_USER = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,RELEASEDATE = ?,AGELIMIT = ?, DURATION = ?";
+	private static final String SQL_UPDATE_DVD = "UPDATE DVDS SET ID_USER = ?,AGELIMIT = ?, DURATION = ?,TITLE = ?,TYPE = ?,DESCRIPTION = ?,EDITOR = ?,AUDIO = ?, RELEASEDATE = ? WHERE ID_DVD = ?";
 	private static final String SQL_DELETE_USER = "DELETE FROM DVDS WHERE ID_DVD = ?";
 	///endregion
 
@@ -104,7 +104,7 @@ public class DVDDAOImpl implements DAO<DVD> {
 
 		try {
 			connection = this.daofactory.getConnection();
-			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_DVD, false, dvd.getDvdId(), dvd.getUserId(), dvd.getAgeLimit(), dvd.getDuration(), dvd.getTitle(), dvd.getType(), dvd.getDescription(), dvd.getEditor(), dvd.getAudio(), dvd.getReleaseDate());
+			preparedStatement = DAOUtils.initPreparedStatement(connection, SQL_UPDATE_DVD, false, dvd.getUserId(), dvd.getAgeLimit(), dvd.getDuration(), dvd.getTitle(), dvd.getType(), dvd.getDescription(), dvd.getEditor(), dvd.getAudio(), dvd.getReleaseDate(),dvd.getDvdId());
 
 			int state = preparedStatement.executeUpdate();
 
