@@ -1,5 +1,13 @@
 # Application Interoperability with Web Services REST Project | REST API
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=efrei.m1.aiws.rest%3Aaiws-rest-project)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=efrei.m1.aiws.rest%3Aaiws-rest-project&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=efrei.m1.aiws.rest%3Aaiws-rest-project&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=efrei.m1.aiws.rest%3Aaiws-rest-project&metric=security_rating)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=efrei.m1.aiws.rest%3Aaiws-rest-project&metric=ncloc)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=efrei.m1.aiws.rest%3Aaiws-rest-project&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=efrei.m1.aiws.rest%3Aaiws-rest-project)
+
 This repository contains the code of the AIWS REST Project for the team composed of:
 - Camille **BRIAND** (M1 SE)
 - Elodie **DEHACHE** (M1 SE)
