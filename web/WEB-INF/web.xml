@@ -21,14 +21,6 @@
 		<param-value>/WEB-INF/db.properties</param-value>
 	</context-param>
 	
-	<listener>
-		<listener-class>efrei.m1.aiws.config.JWTInitializer</listener-class>
-	</listener>
-	
-	<listener>
-		<listener-class>efrei.m1.aiws.config.DAOInitializer</listener-class>
-	</listener>
-	
 	<servlet>
 		<servlet-name>REST API</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
