@@ -70,7 +70,7 @@ The exposed REST api includes the following endpoints
 
 This project does not include unit testing, but all the endpoints have been tested thanks to Postman and its integrated test runner.
 
-## Frontend
+## [Frontend](https://github.com/AmiralBl3ndic/EFREI-M1-SE-AIWS-REST-Project-WebApp)
 
-We have developed a frontend application using Facebook's React.
-Once ready, we will include a link here.
+[We have developed a frontend application using Facebook's React.](https://github.com/AmiralBl3ndic/EFREI-M1-SE-AIWS-REST-Project-WebApp)
+
